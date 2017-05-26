@@ -1,0 +1,195 @@
+<!--<ul class="pager">
+    <li ng-click= "back()"> <a href="#" style="margin: 20px;"><< Voltar</a></li>
+</ul>                                        -->
+<div class="row col-sm-12" style="margin-bottom: 50px;">
+
+
+    <div class=" col-sm-9">
+
+        <!-- Details info -->
+
+        <div class="card panel panel-default ks-widget ks-widget-events-stream">
+            <div class="card-header">
+                Detalhes do Ticket
+                <div class="ks-controls">
+                    <button class="btn btn-success" ng-if="ticket.status==='CLOSED'">Terminado</button>
+                    <button class="btn btn-info" ng-if="ticket.status==='OPENED'">Em Progresso</button>
+                    <button class="btn btn-warning" ng-if="ticket.status==='PENDING'">Pendente</button>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="ks-wrapper ks-scrollable" data-height="270">
+                    <table class="ks-table">
+                        <tbody>
+
+                      
+                          
+                                <tr>
+
+                                    <td class="ks-user">
+                                        <h6>TÉCNICO</h6>
+                                        <img src="webroot/assets/img/company.png" class="ks-avatar" width="55" height="55">
+                                        <!--                                    <span class="badge badge-pill badge-default ks-label">10</span>-->
+                                    </td>
+                                    <td class="ks-info">
+                                        <a href="#" class="ks-name">{{ticket.technician.supplier.name}}</a>
+                                        <div class="ks-description">{{ticket.technician.supplier.address}}</div>
+                                        <div class="ks-description" style="position:absolute; ">Atribuída à:</div><div style="position:absolute; left:24%"><a  href="#">{{ticket.technician.user.name}}</a></div>
+                                        <!--                                    <span class="badge badge-primary-outline ks-label ks-sm">Primary</span>-->
+                                    </td>
+                                    <td class="ks-datetime">
+                                    </td>
+                                </tr>
+                                
+                           
+                        <tr>
+
+                            <td class="ks-user">
+                                <h6>REQUISITOR</h6>
+                                <img src="webroot/assets/img/user.png" class="ks-avatar" width="55" height="55">
+                            </td>
+                            <td class="ks-info">
+                                <a href="#" class="ks-name">{{ticket.consumer.user.name}}</a>
+                                <div class="ks-description">{{ticket.consumer.user.mobile}}</div>
+<!--                                <div class="ks-description" style="position:absolute; ">Através de:</div><div style="position:absolute; left:22%"><a  href="#">Joanete Rombe</a></div>-->
+                            </td>
+                            <td class="ks-datetime">
+
+                            </td>
+                        </tr>
+                        <tr></tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+            <hr> 
+
+
+            <div id="myDeatails"  style="margin-left:15px; margin-right: 15px; margin-bottom: 10px" >
+                <div >
+
+
+                    <form> 
+
+                        <div class="form-group">
+                            <label>Problema</label>
+                            <input type="text"
+                                   class="form-control"
+                                   ng-model="ticket.name"
+                                   disabled
+                                   >
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <input type="text"
+                                   class="form-control"
+                                    ng-model="ticket.category.title"
+                                   disabled   >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Diagnóstico</label>
+                            <textarea rows="7" class="form-control" disabled>{{ticket.diagnostic}}
+                            </textarea>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Solução Aplicada</label>
+                            <textarea rows="7" class="form-control" disabled>{{ticket.solution}}
+                            </textarea>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+
+    <div style="height: 100px" class=" col-sm-3">
+
+          <ul class="timeline">
+            <li ng-repeat="block in timelineInfo">
+                <div class="timeline-badge info"><i class="glyphicon glyphicon-credit-card"></i></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h5 class="timeline-title"ng-if="block.itemType==='TICKET_OPENED'">Abertura</h5>
+                        <h5 class="timeline-title"ng-if="block.itemType==='HELP_CENTER'">Help Center</h5>
+                         <h5 class="timeline-title"ng-if="block.itemType==='CALL_TO_CENTER'">Ligação à Central</h5>
+                          <h5 class="timeline-title"ng-if="block.itemType==='REQUEST_TECHNICIAN'">Requisição de Técnico</h5>
+                         <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_ACCEPT_JOB'">Aceitação</h5>
+                          <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_REJECT_JOB'">Rejeição</h5>
+                               <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_NO_FEEDBACK'">Sem Feedback</h5>
+                                 <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_CHECKIN'">Checkin</h5>
+                               <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_CHECKOUT'">Checkout</h5>
+                                 <h5 class="timeline-title"ng-if="block.itemType==='CLIENT_JOB_FEEDBACK'">Feedback</h5>
+                                 <h5 class="timeline-title"ng-if="block.itemType==='TECHNICIAN_JOB_FEEDBACK'">Feedback</h5>
+                               <h5 class="timeline-title"ng-if="block.itemType==='TICKET_CLOSED'">Encerramento</h5>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='TICKET_OPENED' ">
+                        <p>O cliente efectuou a abertura do  ticket.</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='HELP_CENTER' ">
+                        <p>O cliente solicitou ajuda pelo centro de ajuda (Help Center)</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='CALL_TO_CENTER' ">
+                        <p>Foi feita uma chamada telefonica à central de atendimento.</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='REQUEST_TECHNICIAN' ">
+                        <p>Registada requisicão do técnico</p>
+                    </div>
+                      <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_ACCEPT_JOB' ">
+                        <p>O técnico aceitou a tarefa.</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_REJECT_JOB' ">
+                        <p>O técnico rejeitou a tarefa</p>
+                    </div>
+                       <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_NO_FEEDBACK' ">
+                        <p>Nenhum feedback</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_CHECKIN' ">
+                        <p>O técnico realizou o checkin da tarefa.</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_CHECKOUT' ">
+                        <p>O técnico realizou o checkout</p>
+                    </div>
+                      <div class="timeline-body" ng-if="block.itemType==='CLIENT_JOB_FEEDBACK' ">
+                        <p>Efectuado o feedback pelo cliente</p>
+                    </div>
+                    <div class="timeline-body" ng-if="block.itemType==='TECHNICIAN_JOB_FEEDBACK' ">
+                        <p>O técnico é deu feedback da tarefa</p>
+                    </div>
+                     <div class="timeline-body" ng-if="block.itemType==='TICKET_CLOSED' ">
+                        <p>Encerramento do ticket</p>
+                    </div>
+                     <div class="ks-description" style="color:#757575">
+                        <p> {{block.date}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+</div>
+

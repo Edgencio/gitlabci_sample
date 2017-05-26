@@ -1,0 +1,214 @@
+
+
+
+<div class="ks-column ks-page">
+
+
+    <div class="ks-content">
+        <div class="ks-body ks-profile">
+
+            <div class="ks-tabs-container ks-tabs-default ks-tabs-no-separator ks-full ks-light">
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview" role="tabpanel" aria-expanded="false">
+                        <div class="ks-overview-tab">
+
+                            <div class="row">
+                                <div class="col-lg-7 ks-tables-container">
+                                    <div class="card panel panel-default ks-information ks-light" id="address_contaier">
+                                        <h5 class="card-header">
+                                            <span class="ks-text">Endereços</span>
+
+<!--                                            <button class="btn btn-info" data-toggle="modal" data-target="#myModal">Adicionar</button>-->
+
+                                        </h5>
+                                        <div class="card-block ks-datatable" >
+
+                                            <div class="row col-sm-12" id="address_container">
+
+
+
+                                                <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-repeat="address in customerAddresses" style="width: 100%">
+                                                    <a href="#" class="ks-close" ng-click="showRemoveAddressConfirmAlert(address)">
+                                                        <span class="fa fa-close"></span>
+                                                    </a>
+                                                    <div class="card-block">
+                                                        <ul class="ks-user-list">
+                                                            <li class="ks-item">
+                                                                <span class="ks-video-preview">
+                                                                    <a href="#" class="ks-icon">
+                                                                        <img src="webroot/assets/img/location.png" width="50" height="50">
+                                                                    </a>
+                                                                </span>
+                                                                <div class="ks-body" style="margin-top: 4px">
+                                                                   <h5 class="ks-header">{{address.name}}</h5>
+                                                                    <div class="ks-text">{{address.description}}
+                                                                     <a href="#" style="margin-left: 35px; margin-bottom: 2px" data-toggle="modal" data-target="#editAddressModal" ><span class="fa fa-pencil ks-icon" ng-click="initClickedAddress(address)"></span></a>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                      
+                               
+                                    <div id="customerAddressesNotFound" style="text-align:center; font-weight: bold; display:none" >
+                                        <br/>
+                                        <h1 style="font-size: 100px; color:#017340;  margin-bottom:10px;">:(</h1><br>
+                                        <h1>Não possui endereços ainda!</h1>
+                                        <br/> 
+                                    </div>
+                            
+                                                
+
+                                            </div>
+                                            
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <div class="card panel panel-default ks-information ks-light" style="padding: 5px">
+                                        <h5 class="card-header">
+                                            <span class="ks-text">Ver no mapa</span>
+                                        </h5>
+
+                                        <div id="map" style="background-color: grey; width: 100%; height: 400px"></div>  
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Body content-->
+
+
+
+                <div class="form-group">
+                    <h4>Introduza os dados do afiliado<h4>
+                            </div>
+
+                            <form> 
+
+
+                                <div class="form-group">
+                                    <label>Nomes</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Introduza o nome">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Apelido</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Introduza o apelido">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="(+258)">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Introduza o email" data-validation="email">
+
+                                </div>
+
+                            </form>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                <button  class="btn btn-info " id="btn_edit_address" ng-click="updateAddress()">
+                                    Salvar
+                                </button>
+                            </div>
+                            </div>
+
+                            </div>
+                            </div>
+
+
+
+                            <!--        Adress Modal-->
+                            <div id="editAddressModal" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Modal Body content-->
+
+
+
+                                            <div class="form-group">
+                                                <h4>Informaçoes do Endereço<h4>
+                                                        </div>
+
+                                                        <form> 
+
+
+                                                            <div class="form-group">
+                                                                <label>Nome</label>
+                                                                <input  ng-model="clickedAddress.name" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="Ex: Technoplus">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Endereço</label>
+                                                                <input ng-model="clickedAddress.description" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="Ex: Av Martires da Machava">
+                                                            </div>
+
+                                                        </form>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                            <button  class="btn btn-info " ng-click="updateAddress()" >
+                                                                Salvar
+                                                            </button>
+                                                        </div>
+                                                        </div>
+
+                                                        </div>
+                                                        </div>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+
+    <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+
+<!--            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosuport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
+            <property name="hibernate.connection.username" value="admin"/>
+            <property name="hibernate.connection.password" value="Technoadmin!12"/>-->
+
+
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosupport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="edgencio58"/>
+
+        </properties>
+    </persistence-unit>
+
+
+</persistence>

@@ -1,0 +1,399 @@
+
+
+
+
+
+
+<div class="ks-column ks-page">
+
+
+    <div class="ks-content">
+        <div class="ks-body ks-profile">
+            <div class="ks-header">
+                <div class="ks-user">
+                    <img src="webroot/assets/img/company.png" class="ks-avatar" width="100" height="100">
+                    <div class="ks-info">
+                        <div class="ks-name">{{activeUser.supplier.supplierName}}</div>
+                        <div class="ks-description">{{activeUser.supplier.supplierAddress.description}}</div>
+                        <div class="ks-rating">
+                            <i class="fa fa-star ks-star" aria-hidden="true"></i>
+                            <i class="fa fa-star ks-star" aria-hidden="true"></i>
+                            <i class="fa fa-star ks-star" aria-hidden="true"></i>
+                            <i class="fa fa-star ks-star" aria-hidden="true"></i>
+                            <i class="fa fa-star-half-o ks-star" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="ks-dashboard-widget ks-widget-amount-statistics ks-info">
+                        <div class="ks-statistics">
+                            <span class="ks-amount" data-count-up="3119">{{totalSupplierTickets}}</span>
+                            <span class="ks-text">Requisiçoes </span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ks-dashboard-widget ks-widget-amount-statistics ks-success">
+                        <div class="ks-statistics">
+                            <span class="ks-amount" data-count-up="8201">{{totalPendingTickets}}</span>
+                            <span class="ks-text">Pendentes</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="ks-tabs-container ks-tabs-default ks-tabs-no-separator ks-full ks-light">
+                <section class="nav ks-nav-tabs" style="margin-left: 34px; margin-right: 38px">
+
+                </section>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview" role="tabpanel" aria-expanded="false">
+
+
+                        <div class="row">
+                            <div class="col-xl-9 ks-tables-container">
+
+                              
+                                <div id="pending_tickets_container" class="card panel panel-default ks-information ks-light" ng-if="totalPendingTickets>0" style="margin-bottom: 40px;">
+                                    <h5 class="card-header">
+                                        <span class="ks-text">Não Alocadas</span>
+                                    </h5>
+                                    <div class="card-block ks-datatable" style="margin-bottom: 20px; margin-left: 5px">
+
+                                        <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-repeat="pending_ticket in pendingTickets" ng-attr-id="{{ 'pending_ticket-' + pending_ticket.id }}">
+                                            <div class="card-block" >
+                                                <a  class="ks-item">
+                                                    <div class="ks-preview">
+                                                        <span class="ks-video-preview">
+                                                            <span class="fa fa-windows ks-icon"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div  class="ks-info row col-sm-12" >
+                                                        <div class="col-sm-9" ng-click="showDetails(pending_ticket.id)">
+                                                            <h5 class="ks-header">{{pending_ticket.category.name}}</h5>
+                                                            <span class="ks-text" style="color: #212121">
+                                                                {{pending_ticket.name}}
+                                                            </span>
+                                                            <span class="ks-text" style="margin-left: 10px; color:  #9e9e9e">
+                                                                {{pending_ticket.date}}
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-sm-3" style="left: -10%">
+                                                         <button class="btn btn-default" data-toggle="modal" data-target="#assign_technician_modal" ng-click="initClickedTicket(pending_ticket)">
+                                                                Alocar técnico
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                
+                                
+                                 <div class="card panel panel-default ks-information ks-light" id="panel_search_results" style="margin-bottom: 40px; display: none" >
+                                    <h5 class="card-header">
+                                        <span class="ks-text">Resultados da pesquisa</span>
+                                        <!--                                        <a href="#" class="btn btn-primary-outline ks-light">Requisitar assistência</a>-->
+                                    </h5>
+                                    <div class="card-block ks-datatable" style="margin-bottom: 20px; margin-left: 5px">
+
+
+                                        <div style="height: 280px; width: 280px; position: relative; left:43%; top: 100px" id="search_loader" ng-if="isSearching" >
+                                            <i class="fa fa-spinner fa-spin fa-5x fa-fw"  style="margin: 0 auto; color: #017340" ></i>
+                                            <span class="sr-only">Loading...</span>
+                                            <p>A pesquisar...<p>
+                                        </div>
+                                        <div ng-if="searchResults.length > 0">
+                                            <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-repeat="ticket_result in searchResults" >
+                                                <div class="card-block" ng-click="showDetails(ticket_result.id)">
+                                                    <a  class="ks-item">
+                                                        <div class="ks-preview">
+                                                            <span class="ks-video-preview">
+                                                                <span class="fa fa-windows ks-icon"></span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="ks-info">
+                                                            <h5 class="ks-header">{{ticket_result.category.name}}</h5>
+                                                            <span class="ks-text" style="color: #212121">
+                                                                {{ticket_result.name}}
+                                                            </span>
+                                                            <span class="ks-text" style="margin-left: 10px">
+                                                                {{ticket_result.date}}
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                
+                                
+                                
+
+                       <div class="card panel panel-default ks-information ks-light" ng-show="showTable">
+                                    <h5 class="card-header">
+                                        <span class="ks-text">Todas Assistências</span>
+                                        <div class="dataTables_filter" id="ks-datatable_filter">
+                                            <!--                                            <input aria-controls="ks-datatable" placeholder="Pesquisar..." class="form-control input-sm" type="search">-->
+
+                                        </div>
+                                    </h5>
+                                    <div class="card-block ks-datatable">
+                                        <list name="ticketsList" each="ticket" src="SupplierTicketsFrontier.historyTable" repeat-element=".tableTicketRow" per-page="3" postFetch="postFetchTickets(result)">  
+                                        <table id="ks-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" style="width:100%" >
+                                            <thead>
+                                                <tr>
+                                                    <th>Data</th>
+                                                    <th>Problema</th>
+                                                    <th>Requisitor</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!--                                                <tr id="tableTicketRow" ng-repeat="ticket in tickets" ng-click="showDetails(ticket.id)">-->
+                                                <tr class="tableTicketRow"  ng-click="showDetails(ticket.id)">
+                                                    <td>
+                                                        <a href="#">{{ticket.date}}</a>
+                                                    </td>
+                                                    <td>{{ticket.name}}</td>
+                                                    <td>
+                                                        <div class="ks-user">
+                                                            <span class="ks-name">{{ticket.technician.supplier.name}}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge ks-circle badge-success">{{ticket.status}}</span>
+                                                        <span class="badge ks-circle badge-success" ng-if="ticket.status === 'CLOSED'">Terminado</span>
+                                                        <span class="badge ks-circle badge-warning" ng-if="ticket.status === 'OPENDED'">Em progresso</span>
+                                                        <span class="badge ks-circle badge-danger" ng-if="ticket.status === 'PENDING'">Pendente</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        </list>
+                                    </div>
+
+
+
+                                    <div class="ks-items-block" style="margin: 10px; position:relative; left:1%">                  
+                                        <nav class="center" ng-show="!ticketsList.$empty">
+                                            <ul class="pagination ">
+                                                <li class="page-item">
+                                                    <a class="page-link" ng-click="ticketsList.goToPage(1)" href="#" aria-label="First">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                        <span class="sr-only">First</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link" ng-click="ticketsList.goToPreviousPage()" href="" aria-label="Previous">
+                                                        <span aria-hidden="true">&lt;</span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+                                                <li ng-class="{'active navigation-active' : activePage == page, 'navigation-not-active' : !activePage == page}" ng-click="ticketsList.activatePage(page)" ng-repeat="page in ticketsList.pagesVisible" class="page-item">
+                                                    <a class="page-link" style="color:#888;" href="">{{page}}</a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link" ng-click="ticketsList.goToNextPage()" href="" aria-label="Next">
+                                                        <span aria-hidden="true">&gt;</span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item">
+                                                    <a class="page-link" ng-click="ticketsList.goToLastPage()" href="" aria-label="Last">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                        <span class="sr-only">Last</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>                
+
+
+                                </div>
+          
+                                
+                                
+                                
+                                
+                                
+                                <div id="supplierTicketsNotFound" class="card panel panel-default ks-information ks-light" style="display:none" >
+
+
+                                    <div style="text-align:center; font-weight: bold;">
+                                        <br/>
+                                        <h1 style="font-size: 100px; color:#017340;  margin-bottom:10px;">:(</h1><br>
+                                        <h1>Não recebeu nenhuma solicitação ainda!</h1>
+                                        <br/> 
+                                    </div>
+
+                                </div>
+                                
+                                
+                                
+
+                            </div>
+
+
+
+
+
+                            <div class="col-lg-3">
+                                <div class="card panel panel-default ks-information ks-light">
+                                    <h5 class="card-header" style="background: #017340">
+                                        <span class="ks-text" style="color:#fff">Pesquisa Avançada</span>
+                                    </h5>
+
+
+                                     <form style="padding: 10px"> 
+                                        <label>Categoria:</label>
+                                        <div class="form-group">
+                                            <input type="text" class="category-typeahead form-control" ng-model="category_title" data-provide="typeahead" autocomplete="off" placeholder="Virus">
+                                        </div>
+                                        
+                                        <label>Cliente:</label>
+                                        <div class="form-group">
+                                            <input type="text" class="technician-typeahead form-control" ng-model="customer_name" data-provide="typeahead" autocomplete="off" placeholder="ex: kharin, Lda">
+                                        </div>
+                                        <p>A partir de:</p>
+
+                                        <div class="row ">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">  
+                                                    <input class="datepicker form-control-sm" id="input_date" ng-model="search_date" style="height: 35px" 
+                                                         
+                                                           data-default-date="2017-01-02T16:16:22.585Z"
+                                                            data-date-format="Y-m-d">
+                                                </div>
+                                            </div>
+               
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-info" style="width: 100%" ng-click="search(category_title,customer_name)">PESQUISAR</button>
+                                        </div>
+
+                                    </form>
+
+
+                                </div>
+                                <div class="card panel panel-default ks-information ks-light">
+                                    <h5 class="card-header">
+                                        <span class="ks-text">Informações Adicionais</span>
+                                        <a href="" class="btn btn-primary-outline ks-light ks-no-text" data-toggle="modal" data-target="#edit_contacts_modal"><span class="fa fa-pencil ks-icon"></span></a>
+                                    </h5>
+                                    <div class="card-block">
+                                        <div class="ks-info-list">
+                                            <div class="ks-item">
+                                                <div class="ks-name">Telefone</div>
+                                                <div class="ks-text">{{activeUser.supplier.supplierPhone}}</div>
+                                            </div>
+                                            <div class="ks-item">
+                                                <div class="ks-name">Email</div>
+                                                <div class="ks-text">{{activeUser.supplier.supplierMail}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--        Assign technician Modal-->
+<div id="assign_technician_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Body content-->
+
+                <div class="form-group"><h4>Alocar um técnico<h4></div>
+                            <form> 
+                                <div class="form-group">
+                                    <label>Cliente</label>
+                                    <input  ng-model="clickedTicket.client.name" type="text" class="form-control" placeholder="Ex: Technoplus" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Problema</label>
+                                    <input ng-model="clickedTicket.name" type="text" class="form-control" placeholder="Monitor Quebrado" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                <label>Seleccione o técnico</label>
+<!--                                <select class="form-control" ng-model="selectedTechnician" ng-options="x.user.name for x in supplierTechnicians">-->
+                                    <select class="form-control" id="technician_select" ng-model="supplierTechnicians.model">
+                                <option ng-repeat="technician in supplierTechnicians" value="{{technician.id}}">{{technician.user.name}}</option>
+                                </select>
+                                </div>
+                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                <button  class="btn btn-info " id="ibtn_assign_technician" ng-click="assignTechnician (clickedTicket.id,supplierTechnicians.model)" >Salvar</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+
+<!--        Edit Supplier Contacts modal Modal-->
+<div id="edit_contacts_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Body content-->
+
+                <div class="form-group"><h4>Editar contactos<h4></div>
+                            <form> 
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <input  ng-model="activeUser.supplier.supplierPhone" type="text" class="form-control" placeholder="" >
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input ng-model="activeUser.supplier.supplierMail" type="text" class="form-control" placeholder="" >
+                                </div>
+                       
+                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                <button  class="btn btn-info " id="btn_edit_contacts" ng-click="editContacts (activeUser.supplier.supplierMail, activeUser.supplier.supplierPhone)">Salvar</button>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+
+
+

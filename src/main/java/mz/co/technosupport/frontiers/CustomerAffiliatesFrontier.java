@@ -1,0 +1,121 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mz.co.technosupport.frontiers;
+
+import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import mz.co.hi.web.ActiveUser;
+import mz.co.hi.web.FrontEnd;
+import mz.co.hi.web.meta.Frontier;
+import mz.co.technosupport.data.daos.UserDAO;
+import mz.co.technosupport.data.model.Consumer;
+import mz.co.technosupport.data.model.User;
+import mz.co.technosupport.data.services.AccountClientServiceImpl;
+import mz.co.technosupport.data.services.CustomerService;
+import mz.co.technosupport.data.services.TicketServiceImpl;
+import mz.co.technosupport.dto.UserDTO;
+import mz.co.technosupport.info.account.ClientAccountInfo;
+import mz.co.technosupport.service.AccountClientService;
+import mz.co.technosupport.util.EmailSender;
+
+/**
+ *
+ * @author Edgêncio da Calista
+ */
+@Frontier
+@ApplicationScoped
+public class CustomerAffiliatesFrontier {
+
+    @Inject
+    FrontEnd frontEnd;
+
+    @Inject
+    private ActiveUser activeUser;
+
+    @Inject
+    private CustomerService customerService;
+
+    @Inject
+    private UserDAO userDAO;
+
+    @Inject
+    private AccountClientServiceImpl accountClientServiceImpl;
+
+    public List<Consumer> getAffiliates() {
+        List<Consumer> affiliates = null;
+
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            affiliates = customerService.getCustomerAffiliates(customerId);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return affiliates;
+    }
+
+    public boolean createAffiliate(String fullName, String phone, String email) {
+        UserDTO user = (UserDTO) activeUser.getProperty("user");
+        try {
+            ClientAccountInfo accountInfo = accountClientServiceImpl.addAffiliate(user.getCustomer().getCustomerID(), email, fullName, phone);
+            if (accountInfo != null) {
+                EmailSender.sendActivationMail(email, user.getUserName(),
+                        user.getUserName());
+                frontEnd.ajaxRedirect("customer/affiliates");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean removeAffiliate(String email) {
+
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            accountClientServiceImpl.removeAffiliate(customerId, email);
+            frontEnd.ajaxRedirect("customer/affiliates");
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean editAffiliate(String name, String phone, String email, long user_id) {
+        User user = null;
+        try {
+            user = userDAO.find(user_id);
+            user.setEmail(email);
+            user.setMobile(phone);
+            user.setName(name);
+            System.out.println(name);
+            System.out.println(phone);
+            System.out.println(email);
+            
+      
+            userDAO.update(user);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public void refreshPage() {
+        frontEnd.ajaxRedirect("customer/affiliates");
+    }
+
+}
