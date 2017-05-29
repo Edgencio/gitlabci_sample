@@ -5,11 +5,15 @@
  */
 package mz.co.technosupport.frontiers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import mz.co.hi.web.ActiveUser;
 import mz.co.hi.web.FrontEnd;
+import mz.co.hi.web.component.HiList;
 import mz.co.hi.web.meta.Frontier;
 import mz.co.technosupport.data.daos.UserDAO;
 import mz.co.technosupport.data.model.Consumer;
@@ -19,6 +23,7 @@ import mz.co.technosupport.data.services.CustomerService;
 import mz.co.technosupport.data.services.TicketServiceImpl;
 import mz.co.technosupport.dto.UserDTO;
 import mz.co.technosupport.info.account.ClientAccountInfo;
+import mz.co.technosupport.info.ticket.TicketInfo;
 import mz.co.technosupport.service.AccountClientService;
 import mz.co.technosupport.util.EmailSender;
 
@@ -104,8 +109,7 @@ public class CustomerAffiliatesFrontier {
             System.out.println(name);
             System.out.println(phone);
             System.out.println(email);
-            
-      
+
             userDAO.update(user);
             return true;
         } catch (Exception ex) {
@@ -116,6 +120,28 @@ public class CustomerAffiliatesFrontier {
 
     public void refreshPage() {
         frontEnd.ajaxRedirect("customer/affiliates");
+    }
+
+    public Map fetchAffiliatesPerPage(int pageNumber, int itemsPerPage, Map filter, Map ordering) {
+
+        Map customerAffiliates = new HashMap(0);
+        int totalMatchedPages = 0;
+        int totalMatchedRows = 0;
+        List<Consumer> affiliates = new ArrayList();
+
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            customerAffiliates = customerService.getCustomerAffiliatesPerPage(customerId, pageNumber, itemsPerPage, filter, ordering);
+            affiliates = (List<Consumer>) customerAffiliates.get("list");
+            totalMatchedRows = (int) customerAffiliates.get("total");
+            totalMatchedPages = (int) customerAffiliates.get("pages");
+            return HiList.listEncode(affiliates, totalMatchedRows, pageNumber, totalMatchedPages);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
     }
 
 }

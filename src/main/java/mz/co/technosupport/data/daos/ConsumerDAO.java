@@ -5,6 +5,7 @@
  */
 package mz.co.technosupport.data.daos;
 
+import java.util.HashMap;
 import mz.co.technosupport.data.model.Consumer;
 import mz.co.technosupport.data.model.Customer;
 import mz.co.technosupport.data.model.User;
@@ -14,6 +15,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.TypedQuery;
 import mz.co.technosupport.data.model.Technitian;
 
 /**
@@ -182,5 +185,40 @@ public class ConsumerDAO extends DAO<Consumer> {
            return false;*/
         return false;
     }
+    
+    
+    public Map fetchAffiliatesByCustomer( long customerId, int pageNumber, int itemsPerPage, Map filter, Map ordering) throws Exception {
+        Map results = new HashMap();
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+
+        try {
+            pageNumber--;
+
+            String query = " ";
+
+            TypedQuery<Long> queryCount = em.createQuery("select count(m) from Consumer m where m.customer.id = "+customerId+"  and m.isAdmin = false and m.disabled = false ", Long.class);
+            Query querySelect = em.createQuery("select c from Consumer c where c.customer.id = "+customerId+"  and c.isAdmin = false and c.disabled = false ");
+
+            int totalRows = queryCount.getResultList().get(0).intValue();
+            results.put("total", totalRows);
+
+            results.put("list", querySelect.setFirstResult(pageNumber * itemsPerPage).setMaxResults(itemsPerPage).getResultList());
+
+            results.put("pages", (int) Math.ceil(totalRows / ((Integer) itemsPerPage).doubleValue()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Failed trying to Get DATA");
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return results;
+
+    }
+    
+    
     
 }

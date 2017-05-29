@@ -1,8 +1,7 @@
 Hi.view(function (_) {
 
     _.$preLoad = function () {
-        // _.initAlerts(); 
-        _.fetchSupplierTechnicians();
+   
     }
 
 
@@ -13,6 +12,7 @@ Hi.view(function (_) {
         _.technicianEmail = "";
         _.technicianPhone = "";
         _.technicianFullName="";
+        _.noTechnicians=false;
         _.technicianToEdit="";
         _.onlineTechnicians= [];
 
@@ -74,21 +74,7 @@ Hi.view(function (_) {
     
     
     
-     _.fetchSupplierTechnicians = function () {
 
-        SupplierTechniciansFrontier.getTechnicians().try(function (result) {
-            _.supplierTechnicians = result;
-           
-            for(i=0; i<_.supplierTechnicians.length; i++){
-                if(_.supplierTechnicians[i].available){
-                    _.onlineTechnicians.push(_.supplierTechnicians[i]);     
-                }  
-            }
-            _.$apply();
-            console.log(_.onlineTechnicians);
-        });
-    }
-    
     
      _.createTechnician = function () {
         _.fullName = _.technicianFirstName.concat(" ", _.technicianLastName);
@@ -110,7 +96,7 @@ Hi.view(function (_) {
     
     
       _.removeTechnician= function(){
-        console.log("calling removeTechnician");
+        
            SupplierTechniciansFrontier.removeTechnician(_.technicianEmail).try(function (result) {
             if (result) {
                  _.showRemoveTechnicianSuccessMessage();
@@ -188,10 +174,7 @@ Hi.view(function (_) {
     _.editTechnician= function(){
         
             SupplierTechniciansFrontier.editTechnician(   _.technicianFullName,  _.technicianPhone, _.technicianEmail, _.technicianToEdit.user.id).try(function (result) {
-            console.log(_.technicianFullName);
-            console.log(_.technicianEmail);
-            console.log( _.technicianPhone);
-             console.log( _.technicianToEdit.user.id);
+         
                 if (result) {
                      $('#editTechnicianModal').modal('toggle');
                  _.showEditTechnicianSuccessMessage();
@@ -273,6 +256,18 @@ Hi.view(function (_) {
                
             }
         });
+        
+    }
+    
+    
+    
+    _.postFetchTechnicians = function(result){
+         if (result.totalRowsMatch === 0) {
+            $('#noTechniciansFound').css("display", "block");
+            $('#noTechniciansAvailable').css("display", "none");
+           
+        }
+        
         
     }
   

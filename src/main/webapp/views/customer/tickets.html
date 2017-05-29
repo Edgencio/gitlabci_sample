@@ -60,7 +60,7 @@
                                 <div class="card panel panel-default ks-information ks-light" id="panel_pending_tickets" style="margin-bottom: 40px;" ng-if="totalPendingTickets > 0">
                                     <h5 class="card-header">
                                         <span class="ks-text">Pendentes</span>
-                                        <!--                                        <a href="#" class="btn btn-primary-outline ks-light">Requisitar assistência</a>-->
+                                        <!-- <a href="#" class="btn btn-primary-outline ks-light">Requisitar assistência</a>-->
                                     </h5>
                                     <div class="card-block ks-datatable" style="margin-bottom: 20px; margin-left: 5px">
 
@@ -142,7 +142,7 @@
                                         </div>
                                     </h5>
                                     <div class="card-block ks-datatable">
-                                        <list name="ticketsList" each="ticket" src="CustomerTicketsFrontier.historyTable" repeat-element=".tableTicketRow" per-page="3" postFetch="postFetchTickets(result)">  
+                                        <list name="ticketsList" each="ticket" src="CustomerTicketsFrontier.historyTable" repeat-element=".tableTicketRow" per-page="10" postFetch="postFetchTickets(result)">  
                                         <table id="ks-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" style="width:100%" >
                                             <thead>
                                                 <tr>
@@ -165,10 +165,12 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <span class="badge ks-circle badge-success">{{ticket.status}}</span>
-                                                        <span class="badge ks-circle badge-success" ng-if="ticket.status === 'CLOSED'">Terminado</span>
-                                                        <span class="badge ks-circle badge-warning" ng-if="ticket.status === 'OPENDED'">Em progresso</span>
-                                                        <span class="badge ks-circle badge-danger" ng-if="ticket.status === 'PENDING'">Pendente</span>
+<!--                                                        <span class="badge ks-circle badge-success"  >{{ticket.status}}</span>-->
+
+                                                        <span class="badge ks-circle badge-success" ng-show="ticket.status === 'Terminado'">{{ticket.status}}</span>
+                                                        <span class="badge ks-circle badge-warning" ng-show="ticket.status === 'Em progresso'">{{ticket.status}}</span>
+                                                        <span class="badge ks-circle badge-danger" ng-show="ticket.status === 'Pendente'">{{ticket.status}}</span>
+                                                        
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -244,12 +246,12 @@
 
 
                                     <form style="padding: 10px"> 
-                                        <labe>Categoria:</labe>
+                                        <label>Categoria:</label>
                                         <div class="form-group">
                                             <input type="text" class="category-typeahead form-control" ng-model="category_title" data-provide="typeahead" autocomplete="off" placeholder="Virus">
                                         </div>
 
-                                        <labe>Técnico:</labe>
+                                        <label>Técnico:</label>
                                         <div class="form-group">
                                             <input type="text" class="technician-typeahead form-control" ng-model="technician_name" data-provide="typeahead" autocomplete="off" placeholder="ex: kharin, Lda">
                                         </div>

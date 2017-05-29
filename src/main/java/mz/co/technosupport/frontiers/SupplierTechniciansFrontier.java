@@ -5,13 +5,18 @@
  */
 package mz.co.technosupport.frontiers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import mz.co.hi.web.ActiveUser;
 import mz.co.hi.web.FrontEnd;
+import mz.co.hi.web.component.HiList;
 import mz.co.hi.web.meta.Frontier;
 import mz.co.technosupport.data.daos.UserDAO;
+import mz.co.technosupport.data.model.Consumer;
 import mz.co.technosupport.data.model.Technitian;
 import mz.co.technosupport.data.model.User;
 import mz.co.technosupport.data.services.AccountTechnicianImpl;
@@ -116,7 +121,34 @@ public class SupplierTechniciansFrontier {
     public void refreshPage() {
         frontEnd.ajaxRedirect("supplier/affiliates");
     }
+    
+    
+    
+        public Map fetchTechniciansPerPage(int pageNumber, int itemsPerPage, Map filter, Map ordering) {
+
+        Map customerAffiliates = new HashMap(0);
+        int totalMatchedPages = 0;
+        int totalMatchedRows = 0;
+        List<Consumer> affiliates = new ArrayList();
+
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long supplierId = user.getSupplier().getSupplierID();
+            customerAffiliates = supplierService.getSupplierAffiliatesPerPage(supplierId, pageNumber, itemsPerPage, filter, ordering);
+            affiliates = (List<Consumer>) customerAffiliates.get("list");
+            totalMatchedRows = (int) customerAffiliates.get("total");
+            totalMatchedPages = (int) customerAffiliates.get("pages");
+            return HiList.listEncode(affiliates, totalMatchedRows, pageNumber, totalMatchedPages);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+    }
+
+}
+
 
     
 
-}
+

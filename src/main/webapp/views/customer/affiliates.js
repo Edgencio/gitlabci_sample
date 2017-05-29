@@ -1,8 +1,7 @@
 Hi.view(function (_) {
 
     _.$preLoad = function () {
-        // _.initAlerts(); 
-        _.fetchCustomerAffiliates();       
+           
     }
 
 
@@ -103,19 +102,6 @@ Hi.view(function (_) {
 
 
 
-    _.fetchCustomerAffiliates = function () {
-
-        CustomerAffiliatesFrontier.getAffiliates().try(function (result) {
-            _.customerAffiliates = result;
-            _.$apply();
-            if(_.customerAffiliates.length==0){
-                $('#customerAffiliatesNotFound').css("display", "block");
-            }
-            
-        });
-    }
-
-
     _.createAffiliate = function () {
         _.fullName = _.affiliateFirstName.concat(" ", _.affiliateLastName);
 
@@ -161,6 +147,16 @@ Hi.view(function (_) {
                
             }
         });
+        
+    }
+    
+    
+        _.postFetchAffiliates = function(result){
+         if (result.totalRowsMatch === 0) {
+            $('#customerAffiliatesNotFound').css("display", "block");
+           
+        }
+        
         
     }
     

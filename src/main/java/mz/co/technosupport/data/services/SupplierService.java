@@ -1,7 +1,9 @@
 package mz.co.technosupport.data.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import mz.co.technosupport.data.daos.CustomerDAO;
 import mz.co.technosupport.data.model.Customer;
 
@@ -71,6 +73,23 @@ public class SupplierService {
             ex.printStackTrace();
             return null;
         }
+    }
+    
+    
+         public Map getSupplierAffiliatesPerPage(long supplierId, int pageNumber, int itemsPerPage, Map filter, Map ordering) {
+ 
+        Map affiliates = new HashMap(0);
+
+        try {
+            affiliates = technicianDAO.fetchAffiliatesBySupplier(supplierId, pageNumber, itemsPerPage, filter, ordering);
+           
+          
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Falha a Levar informacao do cliente".toUpperCase());
+        }
+
+        return affiliates;
     }
 
 }

@@ -33,7 +33,7 @@ Hi.view(function (_) {
 
 
     _.postFetchTickets = function (result) {
-        console.log(result);
+     
         if (result.totalRowsMatch == 0) {
             $('#supplierTicketsNotFound').css("display", "block");
             _.showTable = false;
@@ -347,12 +347,11 @@ Hi.view(function (_) {
             _.isSearching = true;
 
             //search using all fields
-            console.log(category_title);
-            console.log(customer_name);
+        
             SupplierTicketsFrontier.fullSearch(category_title, customer_name, startDate).try(function (result) {
                 _.searchResults = result;
                 _.$apply();
-                console.log(_.searchResults);
+               
 
                 if ((typeof result != 'undefined') && (result != null)) {
                     _.isSearching = false;

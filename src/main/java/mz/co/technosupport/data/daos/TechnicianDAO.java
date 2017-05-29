@@ -25,7 +25,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.TypedQuery;
 import mz.co.technosupport.data.model.Consumer;
 
 /**
@@ -178,28 +181,7 @@ public class TechnicianDAO extends DAO<Technitian> {
         return member;
     }
 
-    /*  public List<Technitian> getNearestTechnicians(double latitude, double longitude){
 
-        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
-        List<Technitian> members = null;
-        
-        try{
-
-            members = em.createQuery("select t from Technitian t where t.disabled=false and t.user.name <> ''", Technitian.class)
-                    .getResultList();
-
-        }catch (Exception e){
-            e.printStackTrace();
-            throw  new RuntimeException("Falha ao recuperar dados na Base de Dados");
-        }finally {
-            if(em!=null)
-                em.close();
-        }
-       return members;
-
-
-        
-    }*/
     public List<Technitian> getNearestTechnicians(double latitude, double longitude) {
 
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
@@ -369,5 +351,41 @@ public class TechnicianDAO extends DAO<Technitian> {
 
         return (distance / 1000);
     }
+    
+    
+    
+      public Map fetchAffiliatesBySupplier( long supplierId, int pageNumber, int itemsPerPage, Map filter, Map ordering) throws Exception {
+        Map results = new HashMap();
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+
+        try {
+            pageNumber--;
+
+            String query = " ";
+
+            TypedQuery<Long> queryCount = em.createQuery("select count(m) from Technitian m where m.supplier.id = "+supplierId+"  and m.isAdmin = false and m.disabled = false ", Long.class);
+            Query querySelect = em.createQuery("select t from Technitian t where t.supplier.id = "+supplierId+"  and t.isAdmin = false and t.disabled = false ");
+
+            int totalRows = queryCount.getResultList().get(0).intValue();
+            results.put("total", totalRows);
+
+            results.put("list", querySelect.setFirstResult(pageNumber * itemsPerPage).setMaxResults(itemsPerPage).getResultList());
+
+            results.put("pages", (int) Math.ceil(totalRows / ((Integer) itemsPerPage).doubleValue()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Failed trying to Get DATA");
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return results;
+
+    }
+    
+    
 
 }
