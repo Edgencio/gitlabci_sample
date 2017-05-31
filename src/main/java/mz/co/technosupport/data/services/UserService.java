@@ -131,6 +131,7 @@ public class UserService implements mz.co.technosupport.service.UserService {
                 customer.setCustomerName(cons.getCustomer().getName());
                 customer.setCustomerAddress(cons.getCurrentAddress());
                 customer.setCustomerPhone(cons.getCustomer().getMobile());
+                customer.setCustomerType(cons.getCustomer().getType());
                 userInfo.setCustomer(customer);
             } else if (!isCustomer) {
                 Technitian tech = technicianDAO.findAdminTechnician(usr);
@@ -142,6 +143,7 @@ public class UserService implements mz.co.technosupport.service.UserService {
                 supplier.setSupplierName(tech.getSupplier().getName());
                 supplier.setSupplierAddress(tech.getCurrentAddress());
                 supplier.setSupplierPhone(tech.getSupplier().getPhone());
+                supplier.setSupplierType(tech.getSupplier().getType());
                 userInfo.setSupplier(supplier);
 
             }

@@ -12,12 +12,21 @@ import mz.co.technosupport.data.model.Address;
  * @author Edgencio da calista
  */
 public class CustomerDTO {
-    
+
     private long customerID;
     private String customerName;
     private String customerMail;
     private Address customerAddress;
     private String customerPhone;
+    private String customerType;// if is a person or company;
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
 
     public long getCustomerID() {
         return customerID;
@@ -58,8 +67,5 @@ public class CustomerDTO {
     public void setCustomerAddress(Address customerAddress) {
         this.customerAddress = customerAddress;
     }
-    
-    
-    
-    
+
 }

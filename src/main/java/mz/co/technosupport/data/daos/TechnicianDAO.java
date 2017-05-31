@@ -92,31 +92,28 @@ public class TechnicianDAO extends DAO<Technitian> {
         }
         return null;
     }
-    
-    
-    
-    
-      public List<Technitian> getAffiliates(Long supplier_id) {
+
+    public List<Technitian> getAffiliates(Long supplier_id) {
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         List<Technitian> members = null;
-        try{
-            
+        try {
+
             Query query = em.createQuery("select t from Technitian t where t.supplier.id = :si  and t.isAdmin = false and t.disabled = false ");
-            query.setParameter("si",supplier_id);
-            
+            query.setParameter("si", supplier_id);
+
             members = query.getResultList();
-            if(members.size()>0){
+            if (members.size() > 0) {
                 return members;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if(em!=null)
+        } finally {
+            if (em != null) {
                 em.close();
+            }
         }
         return null;
     }
-    
 
     public List<Technitian> getAllBySuppleir(Long supplier_id) {
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
@@ -180,7 +177,6 @@ public class TechnicianDAO extends DAO<Technitian> {
         }
         return member;
     }
-
 
     public List<Technitian> getNearestTechnicians(double latitude, double longitude) {
 
@@ -351,10 +347,8 @@ public class TechnicianDAO extends DAO<Technitian> {
 
         return (distance / 1000);
     }
-    
-    
-    
-      public Map fetchAffiliatesBySupplier( long supplierId, int pageNumber, int itemsPerPage, Map filter, Map ordering) throws Exception {
+
+    public Map fetchAffiliatesBySupplier(long supplierId, int pageNumber, int itemsPerPage, Map filter, Map ordering) throws Exception {
         Map results = new HashMap();
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
 
@@ -363,8 +357,8 @@ public class TechnicianDAO extends DAO<Technitian> {
 
             String query = " ";
 
-            TypedQuery<Long> queryCount = em.createQuery("select count(m) from Technitian m where m.supplier.id = "+supplierId+"  and m.isAdmin = false and m.disabled = false ", Long.class);
-            Query querySelect = em.createQuery("select t from Technitian t where t.supplier.id = "+supplierId+"  and t.isAdmin = false and t.disabled = false ");
+            TypedQuery<Long> queryCount = em.createQuery("select count(m) from Technitian m where m.supplier.id = " + supplierId + "  and m.isAdmin = false and m.disabled = false ", Long.class);
+            Query querySelect = em.createQuery("select t from Technitian t where t.supplier.id = " + supplierId + "  and t.isAdmin = false and t.disabled = false ");
 
             int totalRows = queryCount.getResultList().get(0).intValue();
             results.put("total", totalRows);
@@ -385,7 +379,21 @@ public class TechnicianDAO extends DAO<Technitian> {
         return results;
 
     }
-    
-    
+
+    public Technitian getByEmail(String email) {
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+        Technitian technitian = null;
+        try {
+           technitian = em.createQuery("select t from Technitian t where t.user.email = :ue ", Technitian.class)
+                    .setParameter("ue", email).setMaxResults(1).getSingleResult();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return technitian;
+    }
 
 }

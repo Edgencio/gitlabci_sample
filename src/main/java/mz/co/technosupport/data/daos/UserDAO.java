@@ -19,27 +19,27 @@ import java.util.List;
  */
 @ApplicationScoped
 public class UserDAO extends DAO<User> {
-    
+
     @Override
     public Class<User> getEntityClass() {
         return User.class;
     }
-    
-    
-    public User getUserByCredentials(String username, String password){
+
+    public User getUserByCredentials(String username, String password) {
         User user = new User();
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
 
-        try{
+        try {
             user = em.createQuery("select t from User t where t.username =:username and  t.password =:password ", User.class)
-            .setParameter("username",username)
-            .setParameter("password",password).setMaxResults(1).getSingleResult();
+                    .setParameter("username", username)
+                    .setParameter("password", password).setMaxResults(1).getSingleResult();
 
-        }catch (NoResultException e){
+        } catch (NoResultException e) {
             user = null;
-        }finally {
-            if(em!=null)
+        } finally {
+            if (em != null) {
                 em.close();
+            }
         }
         return user;
     }
@@ -48,27 +48,75 @@ public class UserDAO extends DAO<User> {
         User user = new User();
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         List<User> members = null;
-        try{
-            Query query = em.createQuery("select t from " + getEntityClass().getName()+ " t where t.username =:username and  t.passwordResetCode =:code ");       
-            query.setParameter("username",username);
-            query.setParameter("code",code);
-            
+        try {
+            Query query = em.createQuery("select t from " + getEntityClass().getName() + " t where t.username =:username and  t.passwordResetCode =:code ");
+            query.setParameter("username", username);
+            query.setParameter("code", code);
+
             members = query.getResultList();
-            if(members.size()>0){
+            if (members.size() > 0) {
                 return members.get(0);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw  new RuntimeException("Falha ao recuperar dados na Base de Dados");
-        }finally {
-            if(em!=null)
+            throw new RuntimeException("Falha ao recuperar dados na Base de Dados");
+        } finally {
+            if (em != null) {
                 em.close();
+            }
         }
-        
+
         return user;
     }
     
     
+
+    public User getUserByEmail(String email){
+        User user = new User();
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+        List<User> members = null;
+        try {
+            Query query = em.createQuery("select t from " + getEntityClass().getName() + " t where t.email =:email");
+            query.setParameter("email", email);
+
+            members = query.getResultList();
+            if (members.size() > 0) {
+
+                return members.get(0);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Falha ao recuperar dados na Base de Dados");
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return user;
+    }
     
     
+     public List<String> getUserEmails(){
+        User user = new User();
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+        List<String> members = null;
+        try {
+            Query query = em.createQuery("select u.email from " + getEntityClass().getName() + " u ");
+            members = query.getResultList();
+            if (members.size() > 0) {
+
+                return members;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Falha ao recuperar dados na Base de Dados");
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return members;
+    }
+    
+
 }

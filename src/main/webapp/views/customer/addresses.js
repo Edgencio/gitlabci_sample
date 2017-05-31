@@ -17,7 +17,7 @@ Hi.view(function (_) {
 
     _.initClickedAddress = function (address) {
         _.clickedAddress = address;
-        console.log(_.clickedAddress);
+
 
     }
 
@@ -80,7 +80,7 @@ Hi.view(function (_) {
 
 
     _.removeAddress = function (id) {
-        console.log(id);
+ 
         CustomerAddressesFrontier.removeAddress(id).try(function (result) {
          
             if (result) {
@@ -98,11 +98,11 @@ Hi.view(function (_) {
         $.confirm({
             title: 'Atenção!',
             content: 'Não poderá desfazer esta acção! Tem certeza que pretende continuar? ',
-            type: 'danger',
+            type: 'warning',
             buttons: {
                 confirm: {
                     text: 'REMOVER',
-                    btnClass: 'btn-danger',
+                    btnClass: 'btn-warning',
                     action: function () {
                         _.removeAddress(_.clickedAddress.id);
 

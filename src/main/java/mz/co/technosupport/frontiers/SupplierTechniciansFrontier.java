@@ -6,6 +6,7 @@
 package mz.co.technosupport.frontiers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ import mz.co.technosupport.data.model.Consumer;
 import mz.co.technosupport.data.model.Technitian;
 import mz.co.technosupport.data.model.User;
 import mz.co.technosupport.data.services.AccountTechnicianImpl;
+import mz.co.technosupport.data.services.CustomerService;
 import mz.co.technosupport.data.services.SupplierService;
+import mz.co.technosupport.data.services.TechnitianService;
 import mz.co.technosupport.dto.UserDTO;
 import mz.co.technosupport.info.account.TechnicianAccountInfo;
 import mz.co.technosupport.util.EmailSender;
@@ -41,10 +44,16 @@ public class SupplierTechniciansFrontier {
 
     @Inject
     private SupplierService supplierService;
-    
+
+    @Inject
+    private CustomerService customerService;
+
     @Inject
     private UserDAO userDAO;
-    
+
+    @Inject
+    private TechnitianService technitianService;
+
     @Inject
     private AccountTechnicianImpl accountTechnicianServiceImpl;
 
@@ -54,7 +63,7 @@ public class SupplierTechniciansFrontier {
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
             long supplierId = user.getSupplier().getSupplierID();
-            tecnhnicians= supplierService.getSupplierAffiliates(supplierId);
+            tecnhnicians = supplierService.getSupplierAffiliates(supplierId);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -71,7 +80,7 @@ public class SupplierTechniciansFrontier {
             if (accountInfo != null) {
                 EmailSender.sendActivationMail(email, user.getUserName(),
                         user.getUserName());
-                frontEnd.ajaxRedirect("supplier/technicians");
+
                 return true;
             } else {
                 return false;
@@ -96,8 +105,7 @@ public class SupplierTechniciansFrontier {
         }
 
     }
-    
-    
+
     public boolean editTechnician(String name, String phone, String email, long user_id) {
         User user = null;
         try {
@@ -105,11 +113,8 @@ public class SupplierTechniciansFrontier {
             user.setEmail(email);
             user.setMobile(phone);
             user.setName(name);
-            System.out.println(name);
-            System.out.println(phone);
-            System.out.println(email);
-            
-      
+         
+
             userDAO.update(user);
             return true;
         } catch (Exception ex) {
@@ -119,12 +124,10 @@ public class SupplierTechniciansFrontier {
     }
 
     public void refreshPage() {
-        frontEnd.ajaxRedirect("supplier/affiliates");
+        frontEnd.ajaxRedirect("supplier/technicians");
     }
-    
-    
-    
-        public Map fetchTechniciansPerPage(int pageNumber, int itemsPerPage, Map filter, Map ordering) {
+
+    public Map fetchTechniciansPerPage(int pageNumber, int itemsPerPage, Map filter, Map ordering) {
 
         Map customerAffiliates = new HashMap(0);
         int totalMatchedPages = 0;
@@ -146,9 +149,33 @@ public class SupplierTechniciansFrontier {
 
     }
 
+    public Collection<String> fetchEmails() {
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long supplierId = user.getSupplier().getSupplierID();
+            return customerService.fetchUsersEmails(supplierId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public char linkAffiliate(String affiliateEmail) {
+          char response='C';
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long supplierId = user.getSupplier().getSupplierID();
+            response=technitianService.saveTechnician(supplierId, affiliateEmail);
+            EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
+                        user.getUserName());
+            return response;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 'C';
+        }
+
+    }
+
 }
-
-
-    
-
-

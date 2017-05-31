@@ -1,24 +1,44 @@
 Hi.view(function (_) {
 
     _.$preLoad = function () {
-           
+
     }
 
 
     _.$postLoad = function () {
-        _.affiliateFirstName="";
-        _.affiliateLastName="";
-        _.affiliateEmail="";
-        _.affiliatePhone="";
-        _.affiliateFullName="";
-        _.affiliateToEdit="";
+        _.affiliateFirstName = "";
+        _.affiliateLastName = "";
+        _.affiliateEmail = "";
+        _.affiliatePhone = "";
+        _.affiliateFullName = "";
+        _.affiliateToEdit = "";
+        _.isNewAffiliate=false;
+        _.existingAffiliateEmail="";
+        _.initTypeAhead();
 
     }
+
+
+_.newAffiliate = function (param){
     
-    
-    
- 
-    
+    if(param==1){
+        _.isNewAffiliate=true;
+        $('#affiliate_name').css("display", "block");
+        $('#affiliate_phone').css("display", "block");
+        $('#affiliate_email').css("display","block");
+        $('#existing_affiliate_email').css("display", "none");
+     
+    }else{
+       _.isNewAffiliate=false; 
+         $('#affiliate_name').css("display", "none");
+        $('#affiliate_phone').css("display", "none");
+        $('#affiliate_email').css("display","none");
+        $('#existing_affiliate_email').css("display", "block");
+      
+    }
+}
+
+
     _.initAlerts = function () {
 
         $('.ks-alert-danger-dialog-example').on('click', function () {
@@ -41,27 +61,39 @@ Hi.view(function (_) {
     }
     
     
-    
+    _.initTypeAhead = function (){
+        $('#affiliate_typeahead').typeahead({
+            source: function(query, process){
+                CustomerAffiliatesFrontier.fetchEmails().try(function(result){
+                    return process(result);
+                });
+            }
+            
+        });
+    }
+
+
+
 
 
     _.showRemoveAffiliateConfirmAlert = function (affiliateEmail) {
-        _.affiliateEmail=affiliateEmail;
-       
+        _.affiliateEmail = affiliateEmail;
+
         $.confirm({
             title: 'Atenção!',
             content: 'Não poderá desfazer esta acção! Tem certeza que pretende continuar? ',
-            type: 'danger',
+            type: 'warning',
             buttons: {
                 confirm: {
                     text: 'REMOVER',
-                    btnClass: 'btn-danger',
-                    action: function(){
-                       _.removeAffiliate();
-                       
+                    btnClass: 'btn-warning',
+                    action: function () {
+                        _.removeAffiliate();
+
                     }
                 },
                 cancel: function () {
-               
+
                 }
             }
         });
@@ -70,25 +102,35 @@ Hi.view(function (_) {
 
 
 
-    _.showSaveAffiliateConfirmAlert = function (affiliateFirstName, affiliateLastName, affiliatePhone, affiliateEmail) {
-     
-        _.affiliateFirstName=affiliateFirstName;
-        _.affiliateLastName=affiliateLastName;
-        _.affiliateEmail=affiliateEmail;
-        _.affiliatePhone=affiliatePhone;
+
+
+
+    _.showSaveAffiliateConfirmAlert = function (affiliateFullName, affiliatePhone, affiliateEmail,  existingAffiliateEmail) {
+
+        _.affiliateFullName = affiliateFullName;
+        _.affiliateEmail = affiliateEmail;
+        _.affiliatePhone = affiliatePhone;
+        _.existingAffiliateEmail = existingAffiliateEmail;
+        
+        if(((typeof (_.existingAffiliateEmail)== "undefined") ||( _.existingAffiliateEmail=="") ||(_.existingAffiliateEmail==null)) && !_.isNewAffiliate){
+               
+             _.emptyEmailMessage();    
+           }else{
+        
+        
         $.confirm({
             title: 'Atenção!',
             content: 'Tem certeza que pretende criar um affiliado novo? ',
-            type: 'danger',
+            type: 'warning',
             buttons: {
                 confirm: {
                     text: 'SALVAR',
-                    btnClass: 'btn-danger',
+                    btnClass: 'btn-warning',
                     action: function () {
-                      $("#save_affiliate_loader").remove();
-                      $('#btn_saveAffiliate').append('<i class="fa fa-spinner fa-spin" id="save_affiliate_loader"  style="margin-left: 10px;"></i>');
+                        $("#save_affiliate_loader").remove();
+                        $('#btn_saveAffiliate').append('<i class="fa fa-spinner fa-spin" id="save_affiliate_loader"  style="margin-left: 10px;"></i>');
                         _.createAffiliate();
-                         
+
                     }
                 },
                 cancel: function () {
@@ -97,45 +139,72 @@ Hi.view(function (_) {
 
             }
         });
+           }
+        
+        
+        
     }
 
 
 
 
     _.createAffiliate = function () {
-        _.fullName = _.affiliateFirstName.concat(" ", _.affiliateLastName);
-
-        CustomerAffiliatesFrontier.createAffiliate(_.fullName, _.affiliatePhone, _.affiliateEmail).try(function (result) {
+        
+     if( _.isNewAffiliate){
+        CustomerAffiliatesFrontier.createAffiliate(_.affiliateFullName, _.affiliatePhone, _.affiliateEmail).try(function (result) {
             if (result) {
-                 $('#myModal').modal('toggle');
-                 _.showCreateAffiliateSuccessMessage();
-                
+                $('#myModal').modal('toggle');
+                _.showCreateAffiliateSuccessMessage();
+
             } else {
-                _.showCreateAffiliateErrorMessage(); 
+                _.showCreateAffiliateErrorMessage();
             }
             _.$apply();
 
         });
+       } else {
+           
+
+           
+        CustomerAffiliatesFrontier.linkAffiliate(_.existingAffiliateEmail).try(function (result){
+            
+            if(result=='A'){
+                  $("#save_affiliate_loader").remove();
+                  $('#myModal').modal('toggle');
+                _.showAffiliateAlreadyLinkedMessage();
+            }else 
+                if(result='B'){
+                 $("#save_affiliate_loader").remove();
+                 $('#myModal').modal('toggle');
+                _.showCreateAffiliateSuccessMessage();
+            }else 
+                if (result=='C') {
+                 $("#save_affiliate_loader").remove();
+               _.showCreateAffiliateErrorMessage(); 
+            }
+        });
+        
+    }
 
     }
-    
-    
-    _.removeAffiliate= function(){
-        
-            CustomerAffiliatesFrontier.removeAffiliate( _.affiliateEmail).try(function (result) {
+
+
+    _.removeAffiliate = function () {
+
+        CustomerAffiliatesFrontier.removeAffiliate(_.affiliateEmail).try(function (result) {
             if (result) {
-                 _.showRemoveAffiliateSuccessMessage();
-                
+                _.showRemoveAffiliateSuccessMessage();
+
             } else {
-                _.showRemoveAffiliateErrorMessage(); 
+                _.showRemoveAffiliateErrorMessage();
             }
-      
+
         });
     }
-    
-    
-        _.showRemoveAffiliateSuccessMessage= function(){
-           $.alert({
+
+
+    _.showRemoveAffiliateSuccessMessage = function () {
+        $.alert({
             title: 'Sucesso!',
             content: 'Affiliado removido com sucesso ',
             type: 'success',
@@ -144,109 +213,150 @@ Hi.view(function (_) {
                     text: 'OK',
                     btnClass: 'btn-success'
                 }
-               
+
             }
         });
-        
+
     }
-    
-    
-        _.postFetchAffiliates = function(result){
-         if (result.totalRowsMatch === 0) {
+
+
+    _.postFetchAffiliates = function (result) {
+        console.log(result);
+        if (result.totalRowsMatch === 0) {
+             
             $('#customerAffiliatesNotFound').css("display", "block");
-           
+
         }
-        
-        
+
+
     }
-    
-    
-        _.showCreateAffiliateSuccessMessage= function(){
-           $.alert({
+
+
+    _.showCreateAffiliateSuccessMessage = function () {
+        $.alert({
             title: 'Sucesso!',
             content: 'Affiliado criado com sucesso ',
             type: 'success',
             buttons: {
                 confirm: {
                     text: 'OK',
-                    btnClass: 'btn-success'
+                    btnClass: 'btn-success',
+                    action: function () {
+                        CustomerAffiliatesFrontier.refreshPage().try(function () {
+
+                        });
+                    }
                 }
-               
+
             }
         });
-        
+
     }
-    
-    
-    
-    _.showRemoveAffiliateErrorMessage= function(){
-           $.alert({
+
+
+ _.showAffiliateAlreadyLinkedMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'Este usuário já está associado como affiliado ',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger',
+                    action: function () {
+                     
+                    }
+                }
+
+            }
+        });
+
+    }
+
+
+ _.showRemoveAffiliateErrorMessage = function () {
+        $.alert({
             title: 'Erro!',
             content: 'Erro ao remover o affiliado! Tende novamente ',
-            type: 'error',
+            type: 'danger',
             buttons: {
                 confirm: {
                     text: 'OK',
                     btnClass: 'btn-danger'
                 }
-               
+
             }
         });
-        
+
     }
-    
-    _.showCreateAffiliateErrorMessage= function(){
-           $.alert({
+
+
+    _.emptyEmailMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'O campo de email não pode ser vazio',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger'
+                }
+
+            }
+        });
+
+    }
+
+    _.showCreateAffiliateErrorMessage = function () {
+        $.alert({
             title: 'Erro!',
             content: 'Erro ao criar affiliado',
-            type: 'error',
+            type: 'danger',
             buttons: {
                 confirm: {
                     text: 'OK',
                     btnClass: 'btn-danger'
                 }
-               
+
             }
         });
-        
+
     }
-    
-    
-    
-       _.initAffiliateToEdit= function(affiliate){
-        
-        _.affiliateToEdit=affiliate;
-      
-        
+
+
+
+    _.initAffiliateToEdit = function (affiliate) {
+
+        _.affiliateToEdit = affiliate;
+
+
     }
-    
-    
-    
-    _.editAffiliate= function(){
-        
-            CustomerAffiliatesFrontier.editAffiliate(   _.affiliateFullName,  _.affiliatePhone, _.affiliateEmail, _.affiliateToEdit.user.id).try(function (result) {
-            console.log(_.affiliateFullName);
-            console.log(_.affiliateEmail);
-            console.log(  _.affiliatePhone);
-             console.log(  _.affiliateToEdit.user.id);
-                if (result) {
-                 _.showEditAffiliateSuccessMessage();
-                
+
+
+
+    _.editAffiliate = function () {
+
+        CustomerAffiliatesFrontier.editAffiliate(_.affiliateFullName, _.affiliatePhone, _.affiliateEmail, _.affiliateToEdit.user.id).try(function (result) {
+
+            if (result) {
+                _.showEditAffiliateSuccessMessage();
+
             } else {
-                _.showEditAffiliateErrorMessage(); 
+                _.showEditAffiliateErrorMessage();
             }
-      
+
         });
     }
-    
-    
-     _.showEditAffiliateConfirmAlert = function (affiliateFullName, affiliatePhone, affiliateEmail) {
-     
-      
-        _.affiliateFullName=affiliateFullName
-        _.affiliateEmail=affiliateEmail;
-        _.affiliatePhone=affiliatePhone;
+
+
+    _.showEditAffiliateConfirmAlert = function (affiliateFullName, affiliatePhone, affiliateEmail) {
+
+
+        _.affiliateFullName = affiliateFullName
+        _.affiliateEmail = affiliateEmail;
+        _.affiliatePhone = affiliatePhone;
         
+
         $.confirm({
             title: 'Atenção!',
             content: 'Tem certeza que pretende editar informações do affiliado? ',
@@ -256,10 +366,10 @@ Hi.view(function (_) {
                     text: 'Actualizar',
                     btnClass: 'btn-danger',
                     action: function () {
-                      $("#update_affiliate_loader").remove();
-                      $('#btn_update_affiliate').append('<i class="fa fa-spinner fa-spin" id="update_affiliate_loader"  style="margin-left: 10px;"></i>');
+                        $("#update_affiliate_loader").remove();
+                        $('#btn_update_affiliate').append('<i class="fa fa-spinner fa-spin" id="update_affiliate_loader"  style="margin-left: 10px;"></i>');
                         _.editAffiliate();
-                         
+
                     }
                 },
                 cancel: function () {
@@ -269,12 +379,12 @@ Hi.view(function (_) {
             }
         });
     }
-    
-    
 
 
-        _.showEditAffiliateSuccessMessage= function(){
-           $.alert({
+
+
+    _.showEditAffiliateSuccessMessage = function () {
+        $.alert({
             title: 'Sucesso!',
             content: 'Dados actualizados com sucesso ',
             type: 'success',
@@ -282,34 +392,34 @@ Hi.view(function (_) {
                 confirm: {
                     text: 'OK',
                     btnClass: 'btn-success',
-                    action: function(){
-                        
+                    action: function () {
+
                         CustomerAffiliatesFrontier.refreshPage().try(function () {
-                           
+
                         });
                     }
                 }
-               
+
             }
         });
-        
+
     }
-    
-    
-      _.showEditAffiliateErrorMessage= function(){
-           $.alert({
+
+
+    _.showEditAffiliateErrorMessage = function () {
+        $.alert({
             title: 'Erro!',
             content: 'Erro ao actualizar informações do affiliado ',
-            type: 'error',
+            type: 'danger',
             buttons: {
                 confirm: {
                     text: 'OK',
                     btnClass: 'btn-danger'
                 }
-               
+
             }
         });
-        
+
     }
 
 

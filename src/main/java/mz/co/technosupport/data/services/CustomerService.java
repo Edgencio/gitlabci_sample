@@ -11,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import mz.co.technosupport.data.daos.AddressDAO;
 import mz.co.technosupport.data.daos.ConsumerDAO;
+import mz.co.technosupport.data.daos.UserDAO;
 import mz.co.technosupport.data.model.Address;
 import mz.co.technosupport.data.model.Consumer;
 
@@ -29,6 +30,9 @@ public class CustomerService {
 
     @Inject
     AddressDAO addressDAO;
+    
+    @Inject
+    UserDAO userDAO;
 
     public List<Consumer> getCustomerAffiliates(long customerId) {
         List<Consumer> affiliates = new ArrayList();
@@ -72,6 +76,23 @@ public class CustomerService {
             return null;
         }
     }
+        
+        
+        
+        
+        public List<String> fetchUsersEmails(long customerId){
+        List<String> affiliates = new ArrayList();
+  
+        try{
+            affiliates= userDAO.getUserEmails();
+            return affiliates;
+        }catch(Exception ex){
+        ex.printStackTrace();
+        return null;
+        }
+        
+        }
+        
     
         
         

@@ -26,7 +26,7 @@
 
 
 
-                                                <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-if="supplierAddresses.length>0" ng-repeat="address in supplierAddresses" style="width: 100%">
+                                                <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-if="supplierAddresses.length > 0" ng-repeat="address in supplierAddresses" style="width: 100%">
                                                     <a href="#" class="ks-close" ng-click="showRemoveAddressConfirmAlert(address)">
                                                         <span class="fa fa-close"></span>
                                                     </a>
@@ -90,52 +90,34 @@
 
 
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
+
+<!--        Adress Modal-->
+<div id="editAddressModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Editar Endereço</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="fa fa-close"></span>
+                </button>
             </div>
             <div class="modal-body">
-                <!-- Modal Body content-->
-
-
-
-                <div class="form-group">
-                    <h4>Introduza os dados do afiliado<h4>
-                            </div>
-
+        
                             <form> 
-
-
                                 <div class="form-group">
-                                    <label>Nomes</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           placeholder="Introduza o nome">
+                                    <label>Nome</label>
+                                    <input  ng-model="clickedAddress.name" type="text"
+                                            class="form-control"
+                                            placeholder="Ex: Technoplus">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Apelido</label>
-                                    <input type="text"
+                                    <label>Endereço</label>
+                                    <input ng-model="clickedAddress.description" type="text"
                                            class="form-control"
-                                           placeholder="Introduza o apelido">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Telefone</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           placeholder="(+258)">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>E-mail</label>
-                                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Introduza o email" data-validation="email">
-
+                                           placeholder="Ex: Av Martires da Machava">
                                 </div>
 
                             </form>
@@ -144,7 +126,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                <button  class="btn btn-info " id="btn_edit_address" ng-click="updateAddress()">
+                                <button  class="btn btn-info " ng-click="updateAddress()" >
                                     Salvar
                                 </button>
                             </div>
@@ -152,55 +134,3 @@
 
                             </div>
                             </div>
-
-
-
-                            <!--        Adress Modal-->
-                            <div id="editAddressModal" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Modal Body content-->
-
-
-
-                                            <div class="form-group">
-                                                <h4>Informaçoes do Endereço<h4>
-                                                        </div>
-
-                                                        <form> 
-
-
-                                                            <div class="form-group">
-                                                                <label>Nome</label>
-                                                                <input  ng-model="clickedAddress.name" type="text"
-                                                                        class="form-control"
-                                                                        placeholder="Ex: Technoplus">
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label>Endereço</label>
-                                                                <input ng-model="clickedAddress.description" type="text"
-                                                                       class="form-control"
-                                                                       placeholder="Ex: Av Martires da Machava">
-                                                            </div>
-
-                                                        </form>
-
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                                            <button  class="btn btn-info " ng-click="updateAddress()" >
-                                                                Salvar
-                                                            </button>
-                                                        </div>
-                                                        </div>
-
-                                                        </div>
-                                                        </div>

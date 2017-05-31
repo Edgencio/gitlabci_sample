@@ -106,6 +106,31 @@ public class ConsumerDAO extends DAO<Consumer> {
         return null;
     }
 
+    
+    
+    
+    public List<String> getNonAffiliates(Long customer_id) {
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+        List<String> members = null;
+        try{
+            
+            Query query = em.createQuery("select c.user.email from Consumer c where c.customer.id != :cs  and c.isAdmin = false");
+            query.setParameter("cs",customer_id);
+            
+            members = query.getResultList();
+            if(members.size()>0){
+                return members;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(em!=null)
+                em.close();
+        }
+        return null;
+    }
+    
+    
     public Consumer getAffiliateByUser(long customerId, long userId) {
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         Consumer member = null;
@@ -161,6 +186,21 @@ public class ConsumerDAO extends DAO<Consumer> {
     }
     
     
+    public Consumer getByEmail(String email){
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+        Consumer consumer = null;
+        try{
+            consumer = em.createQuery("select c from Consumer c where c.user.email = :ue ", Consumer.class)
+                    .setParameter("ue",email).setMaxResults(1).getSingleResult();
+        }catch (NoResultException e){
+            e.printStackTrace();
+        }finally {
+            if(em!=null)
+                em.close();
+        }
+        return consumer;
+    }
+    
     public boolean removeAffiliate(Customer customer, User usr) {
         /*EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         List<Consumer> members = null;
@@ -196,7 +236,7 @@ public class ConsumerDAO extends DAO<Consumer> {
 
             String query = " ";
 
-            TypedQuery<Long> queryCount = em.createQuery("select count(m) from Consumer m where m.customer.id = "+customerId+"  and m.isAdmin = false and m.disabled = false ", Long.class);
+            TypedQuery<Long> queryCount = em.createQuery("select count(m) from "+ getEntityClass().getSimpleName() + " m where m.customer.id = "+customerId+"  and m.isAdmin = false and m.disabled = false", Long.class);
             Query querySelect = em.createQuery("select c from Consumer c where c.customer.id = "+customerId+"  and c.isAdmin = false and c.disabled = false ");
 
             int totalRows = queryCount.getResultList().get(0).intValue();

@@ -17,7 +17,7 @@ Hi.view(function (_) {
         _.initPickers();
         _.fetchCustomerContacts();
         _.fetchSuppliers();
-        _.initJQuery();
+        _.initTypeAhead();
         _.isSearching = true;
         _.showTable = false;
 
@@ -45,7 +45,7 @@ Hi.view(function (_) {
 
 
     _.postFetchTickets = function (result) {
-      
+      console.log(result);
         if (result.totalRowsMatch == 0) {
             $('#customerTicketsNotFound').css("display", "block");
              _.showTable = false;
@@ -186,7 +186,7 @@ Hi.view(function (_) {
 
 
 
-    _.initJQuery = function () {
+    _.initTypeAhead = function () {
         $('.category-typeahead').typeahead({
             source: function (query, process) {
                 CustomerTicketsFrontier.fetchCategories().try(function (result) {
@@ -208,8 +208,6 @@ Hi.view(function (_) {
 
     _.search = function (category_title, technician_name) {
         var startDate = $("#input_date").val();
-//       calendar = flatpickr("#input_date");
-//       var startDate=calendar.altInput.value;
         if (typeof startDate == 'undefined') {
             startDate = "2017-01-01";
         }

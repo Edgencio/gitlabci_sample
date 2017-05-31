@@ -5,6 +5,9 @@
  */
 package mz.co.technosupport.data.services;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import mz.co.technosupport.data.daos.AddressDAO;
 import mz.co.technosupport.data.daos.SupplierDAO;
 import mz.co.technosupport.data.daos.TechnicianDAO;
@@ -261,16 +264,16 @@ public class AccountTechnicianImpl implements AccountTechnicianService {
         User user = userDAO.findByKey("email",email);
         if(user==null){
 
-            String username = email.replace("@","");
-            username = username.replace(".","_");
-
+//            String username = email.replace("@","");
+//            username = username.replace(".","_");
+            String username=email;
             user = new User();
             user.setStatus(1);
             user.setUsername(username);
             user.setEmail(email);
             user.setName(name);
             user.setMobile(phone);
-            user.setPassword("123456");
+            user.setPassword(getMD5("support123"));
             
             userDAO.create(user);
         }
@@ -303,6 +306,25 @@ public class AccountTechnicianImpl implements AccountTechnicianService {
 
 
         return technicianAccountInfo;
+    }
+        
+        
+        
+    public String getMD5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+            // Now we need to zero pad it if you actually want the full 32 chars.
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            System.out.println("passe encriptada: "+hashtext);
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     

@@ -18,6 +18,15 @@ public class SupplierDTO {
     private String supplierMail;
     private Address supplierAddress;
     private String supplierPhone;
+    private String supplierType;
+
+    public String getSupplierType() {
+        return supplierType;
+    }
+
+    public void setSupplierType(String suppliertype) {
+        this.supplierType = suppliertype;
+    }
 
     public long getSupplierID() {
         return supplierID;
@@ -50,7 +59,6 @@ public class SupplierDTO {
     public void setSupplierPhone(String supplierPhone) {
         this.supplierPhone = supplierPhone;
     }
-    
 
     public Address getSupplierAddress() {
         return supplierAddress;
@@ -59,8 +67,5 @@ public class SupplierDTO {
     public void setSupplierAddress(Address suppplierAddress) {
         this.supplierAddress = suppplierAddress;
     }
-    
-    
-    
-    
+
 }

@@ -11,7 +11,8 @@
         <div class="ks-body ks-profile">
             <div class="ks-header">
                 <div class="ks-user">
-                    <img src="webroot/assets/img/company.png" class="ks-avatar" width="100" height="100">
+                   <img ng-show="activeUser.supplier.supplierType=='C'" src="webroot/assets/img/company.png" class="ks-avatar" width="100" height="100">
+                    <img ng-show="activeUser.supplier.supplierType==='P'" src="webroot/assets/img/user.png" class="ks-avatar" width="100" height="100">
                     <div class="ks-info">
                         <div class="ks-name">{{activeUser.supplier.supplierName}}</div>
                         <div class="ks-description">{{activeUser.supplier.supplierAddress.description}}</div>
@@ -59,14 +60,14 @@
                         <div class="row">
                             <div class="col-xl-9 ks-tables-container">
 
-                              
-                                <div id="pending_tickets_container" class="card panel panel-default ks-information ks-light" ng-if="totalPendingTickets>0" style="margin-bottom: 40px;">
+
+                                <div id="pending_tickets_container" class="card panel panel-default ks-information ks-light" ng-if="totalPendingTickets > 0" style="margin-bottom: 40px;">
                                     <h5 class="card-header">
                                         <span class="ks-text">Não Alocadas</span>
                                     </h5>
                                     <div class="card-block ks-datatable" style="margin-bottom: 20px; margin-left: 5px">
 
-                                        <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-repeat="pending_ticket in pendingTickets" ng-attr-id="{{ 'pending_ticket-' + pending_ticket.id }}">
+                                        <div class="card panel panel-default ks-simple ks-widget-simple-offer" ng-repeat="pending_ticket in pendingTickets" ng-attr-id="{{ 'pending_ticket-' + pending_ticket.id}}">
                                             <div class="card-block" >
                                                 <a  class="ks-item">
                                                     <div class="ks-preview">
@@ -85,7 +86,7 @@
                                                             </span>
                                                         </div>
                                                         <div class="col-sm-3" style="left: -10%">
-                                                         <button class="btn btn-default" data-toggle="modal" data-target="#assign_technician_modal" ng-click="initClickedTicket(pending_ticket)">
+                                                            <button class="btn btn-default" data-toggle="modal" data-target="#assign_technician_modal" ng-click="initClickedTicket(pending_ticket)">
                                                                 Alocar técnico
                                                             </button>
                                                         </div>
@@ -98,9 +99,9 @@
                                 </div>
 
 
-                                
-                                
-                                 <div class="card panel panel-default ks-information ks-light" id="panel_search_results" style="margin-bottom: 40px; display: none" >
+
+
+                                <div class="card panel panel-default ks-information ks-light" id="panel_search_results" style="margin-bottom: 40px; display: none" >
                                     <h5 class="card-header">
                                         <span class="ks-text">Resultados da pesquisa</span>
                                         <!--                                        <a href="#" class="btn btn-primary-outline ks-light">Requisitar assistência</a>-->
@@ -140,11 +141,11 @@
                                 </div>
 
 
-                                
-                                
-                                
 
-                       <div class="card panel panel-default ks-information ks-light" ng-show="showTable">
+
+
+
+                                <div class="card panel panel-default ks-information ks-light" ng-show="showTable">
                                     <h5 class="card-header">
                                         <span class="ks-text">Todas Assistências</span>
                                         <div class="dataTables_filter" id="ks-datatable_filter">
@@ -164,7 +165,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                               
+
                                                 <tr class="tableTicketRow"  ng-click="showDetails(ticket.id)">
                                                     <td>
                                                         <a href="#">{{ticket.date}}</a>
@@ -176,7 +177,7 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                      
+
                                                         <span class="badge ks-circle badge-success" ng-show="ticket.status === 'Terminado'">Terminado</span>
                                                         <span class="badge ks-circle badge-warning" ng-show="ticket.status === 'Em progresso'">Em progresso</span>
                                                         <span class="badge ks-circle badge-danger" ng-show="ticket.status === 'Pendente'">Pendente</span>
@@ -225,12 +226,12 @@
 
 
                                 </div>
-          
-                                
-                                
-                                
-                                
-                                
+
+
+
+
+
+
                                 <div id="supplierTicketsNotFound" class="card panel panel-default ks-information ks-light" style="display:none" >
 
 
@@ -242,9 +243,9 @@
                                     </div>
 
                                 </div>
-                                
-                                
-                                
+
+
+
 
                             </div>
 
@@ -259,12 +260,12 @@
                                     </h5>
 
 
-                                     <form style="padding: 10px"> 
+                                    <form style="padding: 10px"> 
                                         <label>Categoria:</label>
                                         <div class="form-group">
                                             <input type="text" class="category-typeahead form-control" ng-model="category_title" data-provide="typeahead" autocomplete="off" placeholder="Virus">
                                         </div>
-                                        
+
                                         <label>Cliente:</label>
                                         <div class="form-group">
                                             <input type="text" class="technician-typeahead form-control" ng-model="customer_name" data-provide="typeahead" autocomplete="off" placeholder="ex: kharin, Lda">
@@ -275,16 +276,16 @@
                                             <div class="col-sm-12">
                                                 <div class="form-group">  
                                                     <input class="datepicker form-control-sm" id="input_date" ng-model="search_date" style="height: 35px" 
-                                                         
+
                                                            data-default-date="2017-01-02T16:16:22.585Z"
-                                                            data-date-format="Y-m-d">
+                                                           data-date-format="Y-m-d">
                                                 </div>
                                             </div>
-               
+
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                            <button class="btn btn-info" style="width: 100%" ng-click="search(category_title,customer_name)">PESQUISAR</button>
+                                            <button class="btn btn-info" style="width: 100%" ng-click="search(category_title, customer_name)">PESQUISAR</button>
                                         </div>
 
                                     </form>
@@ -328,13 +329,14 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <div class="modal-header">
+                <h5 class="modal-title">Alocar Técnico</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="fa fa-close"></span>
+                </button>
             </div>
             <div class="modal-body">
-                <!-- Modal Body content-->
-
-                <div class="form-group"><h4>Alocar um técnico<h4></div>
+           
                             <form> 
                                 <div class="form-group">
                                     <label>Cliente</label>
@@ -344,55 +346,59 @@
                                     <label>Problema</label>
                                     <input ng-model="clickedTicket.name" type="text" class="form-control" placeholder="Monitor Quebrado" readonly>
                                 </div>
-                                
+
                                 <div class="form-group">
-                                <label>Seleccione o técnico</label>
-<!--                                <select class="form-control" ng-model="selectedTechnician" ng-options="x.user.name for x in supplierTechnicians">-->
+                                    <label>Seleccione o técnico</label>
+                                    <!--                                <select class="form-control" ng-model="selectedTechnician" ng-options="x.user.name for x in supplierTechnicians">-->
                                     <select class="form-control" id="technician_select" ng-model="supplierTechnicians.model">
-                                <option ng-repeat="technician in supplierTechnicians" value="{{technician.id}}">{{technician.user.name}}</option>
-                                </select>
+                                        <option ng-repeat="technician in supplierTechnicians" value="{{technician.id}}">{{technician.user.name}}</option>
+                                    </select>
                                 </div>
                             </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                <button  class="btn btn-info " id="ibtn_assign_technician" ng-click="assignTechnician (clickedTicket.id,supplierTechnicians.model)" >Salvar</button>
+                                <button  class="btn btn-info " id="ibtn_assign_technician" ng-click="assignTechnician(clickedTicket.id, supplierTechnicians.model)" >Salvar</button>
                             </div>
                             </div>
                             </div>
                             </div>
 
-<!--        Edit Supplier Contacts modal Modal-->
-<div id="edit_contacts_modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <!-- Modal Body content-->
 
-                <div class="form-group"><h4>Editar contactos<h4></div>
-                            <form> 
-                                <div class="form-group">
-                                    <label>Telefone</label>
-                                    <input  ng-model="activeUser.supplier.supplierPhone" type="text" class="form-control" placeholder="" >
+                            <!--        Edit Supplier Contacts modal Modal-->
+                            <div id="edit_contacts_modal" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Editar Contactos</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true" class="fa fa-close"></span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Modal Body content-->
+
+                                            <form> 
+                                                <div class="form-group">
+                                                    <label>Telefone</label>
+                                                    <input  ng-model="activeUser.supplier.supplierPhone" type="text" class="form-control" placeholder="" >
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Email</label>
+                                                    <input ng-model="activeUser.supplier.supplierMail" type="text" class="form-control" placeholder="" >
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                            <button  class="btn btn-info " id="btn_edit_contacts" ng-click="editContacts(activeUser.supplier.supplierMail, activeUser.supplier.supplierPhone)">Salvar</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input ng-model="activeUser.supplier.supplierMail" type="text" class="form-control" placeholder="" >
-                                </div>
-                       
-                            </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                                <button  class="btn btn-info " id="btn_edit_contacts" ng-click="editContacts (activeUser.supplier.supplierMail, activeUser.supplier.supplierPhone)">Salvar</button>
-                            </div>
-                            </div>
-                            </div>
                             </div>
 
 

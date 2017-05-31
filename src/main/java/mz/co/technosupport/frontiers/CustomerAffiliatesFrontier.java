@@ -6,6 +6,7 @@
 package mz.co.technosupport.frontiers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import mz.co.technosupport.data.daos.UserDAO;
 import mz.co.technosupport.data.model.Consumer;
 import mz.co.technosupport.data.model.User;
 import mz.co.technosupport.data.services.AccountClientServiceImpl;
+import mz.co.technosupport.data.services.ConsumerService;
 import mz.co.technosupport.data.services.CustomerService;
 import mz.co.technosupport.data.services.TicketServiceImpl;
 import mz.co.technosupport.dto.UserDTO;
@@ -46,6 +48,9 @@ public class CustomerAffiliatesFrontier {
 
     @Inject
     private UserDAO userDAO;
+    
+    @Inject
+    private ConsumerService consumerService;
 
     @Inject
     private AccountClientServiceImpl accountClientServiceImpl;
@@ -55,6 +60,7 @@ public class CustomerAffiliatesFrontier {
 
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
+            
             long customerId = user.getCustomer().getCustomerID();
             affiliates = customerService.getCustomerAffiliates(customerId);
 
@@ -73,7 +79,6 @@ public class CustomerAffiliatesFrontier {
             if (accountInfo != null) {
                 EmailSender.sendActivationMail(email, user.getUserName(),
                         user.getUserName());
-                frontEnd.ajaxRedirect("customer/affiliates");
                 return true;
             } else {
                 return false;
@@ -106,9 +111,7 @@ public class CustomerAffiliatesFrontier {
             user.setEmail(email);
             user.setMobile(phone);
             user.setName(name);
-            System.out.println(name);
-            System.out.println(phone);
-            System.out.println(email);
+         
 
             userDAO.update(user);
             return true;
@@ -143,5 +146,38 @@ public class CustomerAffiliatesFrontier {
         }
 
     }
+    
+    
+    public Collection<String> fetchEmails() {
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            return customerService.fetchUsersEmails(customerId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+
+        }
+    }
+    
+    
+    public char linkAffiliate (String affiliateEmail){
+        char response='C';
+    try{
+        UserDTO user = (UserDTO) activeUser.getProperty("user");
+        long customerId = user.getCustomer().getCustomerID();
+        response=consumerService.saveConsumer(customerId, affiliateEmail);
+         EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
+                        user.getUserName());
+        return response;
+     
+    
+    }catch(Exception ex){
+    ex.printStackTrace();
+    return 'C';
+    }
+    
+    }
+    
 
 }
