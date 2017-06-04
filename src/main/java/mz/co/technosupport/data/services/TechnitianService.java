@@ -32,7 +32,7 @@ public class TechnitianService {
 
     @Inject
     CustomerDAO customerDAO;
-    
+
     @Inject
     SupplierDAO supplierDAO;
 
@@ -41,34 +41,48 @@ public class TechnitianService {
 
     public char saveTechnician(long supplierId, String affiliateEmail) {
         User user = null;
+        char errorController = 'C';
         Supplier supplier = null;
         Technitian verifytechnitian = null;
 
         try {
-           verifytechnitian = technitianDAO.getByEmail(affiliateEmail);
-            if (verifytechnitian != null) {
-                return 'A'; // Means user is already an affiliate; 
-            }
-
             user = userDAO.getUserByEmail(affiliateEmail);
-            supplier = supplierDAO.find(supplierId);
 
-            Technitian tech = new Technitian();
-            tech.setUser(user);
-            tech.setIsAdmin(false);
-            tech.setDisabled(false);
-            tech.setSupplier(supplier);
-            tech.setLatitude(-25.998345);
-            tech.setlongitude(32.445455);
-            tech.setAvailable(false);
-            tech.setCreated_at(new Date());
-            technitianDAO.create(tech);
-            return 'B'; // Means affilate successfully linked;
+            verifytechnitian = technitianDAO.getByEmail(affiliateEmail);
+            if (verifytechnitian == null) {
 
+                supplier = supplierDAO.find(supplierId);
+
+                Technitian tech = new Technitian();
+                tech.setUser(user);
+                tech.setIsAdmin(false);
+                tech.setDisabled(false);
+                tech.setSupplier(supplier);
+                tech.setLatitude(-25.998345);
+                tech.setlongitude(32.445455);
+                tech.setAvailable(false);
+                tech.setCreated_at(new Date());
+                technitianDAO.create(tech);
+                errorController = 'B'; // Means affilate successfully linked;
+
+            } else {
+                if (verifytechnitian.isDisabled()) {
+                    supplier = supplierDAO.find(supplierId);
+
+                    verifytechnitian.setAvailable(false);
+                    technitianDAO.update(verifytechnitian);
+                    errorController = 'B';
+                } else if (!verifytechnitian.isDisabled()) {
+                    errorController = 'A';
+                }
+
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return 'C'; // Means There was an error during the operation;
         }
+
+        return errorController;
 
     }
 

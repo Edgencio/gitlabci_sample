@@ -141,7 +141,7 @@
                     <div class="col-sm-9"></div>
                     <div class="col-sm-3">
 
-                        <a  ng-show="!isNewAffiliate" ng-click="newAffiliate(1)" style="height: 20px;"><span style="margin-bottom: 10px; font-size: 12.2px; color: #017340; cursor: pointer;">Novo Afiliado</span></a>
+                        <a  ng-show="!isNewAffiliate" ng-click="newAffiliate(1)" style="height: 20px;"><span style="margin-bottom: 10px; font-size: 12.2px; color: #017340; cursor: pointer;">Novo afiliado</span></a>
                         <a  ng-show="isNewAffiliate"  ng-click="newAffiliate(0)" style="height: 20px;"><span style="margin-bottom: 10px; font-size: 12.2px; color: #017340; cursor: pointer;">Existente</span></a>
 
                     </div>
@@ -162,11 +162,11 @@
                     <div id="affiliate_email" class="form-group" style="display:none">
                         <label>E-mail</label>
                         <input type="email" class="form-control" aria-describedby="emailHelp" ng-model="affiliateEmail" placeholder="Introduza o email" data-validation="email" required>
-
                     </div>
-
-                    <div id="existing_affiliate_email" class="form-group">
+                    
+                    <div id="existing_affiliate_email" class="form-group" style="margin-top:10px">
                         <label>E-mail</label>
+                        <p style="color:#757575; font-size: 11px">Introduza o email de um afiliado. Caso este ainda não possua uma conta no Technosupport, clique em "Novo afiliado" </p>
                         <input type="email" class="form-control" id="affiliate_typeahead" aria-describedby="emailHelp" ng-model="existingAffiliateEmail" placeholder="Introduza o email"  data-provide="typeahead" autocomplete="off" data-validation="email" required>
                     </div>
                 </form>

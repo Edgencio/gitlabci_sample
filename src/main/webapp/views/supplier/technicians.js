@@ -17,7 +17,7 @@ Hi.view(function (_) {
         _.onlineTechnicians = [];
         _.isNewTechnician = false;
         _.existingTechnicianEmail = "";
-        _.initTypeAhead();
+       // _.initTypeAhead();
 
     }
 
@@ -56,15 +56,16 @@ Hi.view(function (_) {
 
     _.showRemoveTechnicianConfirmAlert = function (technicianEmail) {
         _.technicianEmail = technicianEmail;
-
+     
+        console.log(_.technicianEmail);
         $.confirm({
             title: 'Atenção!',
             content: 'Não poderá desfazer esta acção! Tem certeza que pretende continuar? ',
-            type: 'danger',
+            type: 'warning',
             buttons: {
                 confirm: {
                     text: 'REMOVER',
-                    btnClass: 'btn-danger',
+                    btnClass: 'btn-warning',
                     action: function () {
                         _.removeTechnician();
 
@@ -119,7 +120,7 @@ Hi.view(function (_) {
     _.emptyEmailMessage = function () {
         $.alert({
             title: 'Erro!',
-            content: 'O campo de email não pode ser vazio',
+            content: 'Por favor introduza um email válido',
             type: 'danger',
             buttons: {
                 confirm: {
@@ -135,41 +136,58 @@ Hi.view(function (_) {
 
 
     _.createTechnician = function () {
+         $('#btn_saveTechnician').prop("disabled", "true");
 
         if (_.isNewTechnician) {
             SupplierTechniciansFrontier.createTechnician(_.technicianFullName, _.technicianPhone, _.technicianEmail).try(function (result) {
                 if (result) {
                     $("#save_technicnian_loader").remove();
+                     $('#btn_saveTechnician').prop("disabled", "false");
                     $('#add_technician_modal').modal('toggle');
                     _.showCreateTechnicianSuccessMessage();
 
                 } else {
                     $("#save_technicnian_loader").remove();
+                    $('#btn_saveTechnician').prop("disabled", "false");
                     _.showCreateTechnicianErrorMessage();
                 }
                 _.$apply();
 
             });
-        } else {
-
-            SupplierTechniciansFrontier.linkAffiliate(_.existingTechnicianEmail).try(function (result) {
+        } else if(!_.isNewTechnician){
+            
+            SupplierTechniciansFrontier.checkIfUserExists(_.existingTechnicianEmail).try(function (result){
+                if(result==true){
+                   SupplierTechniciansFrontier.linkAffiliate(_.existingTechnicianEmail).try(function (result) {
 
 
                 if (result == 'A') {
                     $("#save_technicnian_loader").remove();
+                    $('#btn_saveTechnician').prop("disabled", "false");
                     $('#add_technician_modal').modal('toggle');
                     _.showTechnicianAlreadyLinkedMessage();
                 } else
-                if (result = 'B') {
+                    if (result = 'B') {
                     $("#save_technicnian_loader").remove();
+                    $('#btn_saveTechnician').prop("disabled", "false");
                     $('#add_technician_modal').modal('toggle');
                     _.showCreateTechnicianSuccessMessage();
                 } else
-                {
+                if (result = 'C') {
                     $("#save_technicnian_loader").remove();
+                    $('#btn_saveTechnician').prop("disabled", "false");
                     _.showCreateTechnicianErrorMessage();
+                } 
+            });  
+                }else{
+                    $("#save_technicnian_loader").remove();
+                    $('#btn_saveTechnician').prop("disabled", "false");
+                    _.showUserNotFoundMessage();
                 }
+                
             });
+
+           
 
         }
 
@@ -177,7 +195,27 @@ Hi.view(function (_) {
 
 
 
+   _.showUserNotFoundMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'Usuário não encontrado!Tente criar um novo',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger',
+                    action: function(){
+     
+                           SupplierTechniciansFrontier.refreshPage().try(function () {
 
+                        });
+                    }
+                }
+
+            }
+        });
+
+    }
 
     _.removeTechnician = function () {
 
@@ -202,6 +240,24 @@ Hi.view(function (_) {
                 confirm: {
                     text: 'OK',
                     btnClass: 'btn-success'
+                }
+
+            }
+        });
+
+    }
+
+
+
+    _.showRemoveTechnicianErrorMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'Erro ao remover tecnico ',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger'
                 }
 
             }
@@ -282,14 +338,17 @@ Hi.view(function (_) {
 
 
     _.editTechnician = function () {
-
+        
+        $('#btn_update_technician').prop("disabled","true");
         SupplierTechniciansFrontier.editTechnician(_.technicianFullName, _.technicianPhone, _.technicianEmail, _.technicianToEdit.user.id).try(function (result) {
 
             if (result) {
+                $('#btn_update_technician').prop("disabled","false");
                 $('#editTechnicianModal').modal('toggle');
                 _.showEditTechnicianSuccessMessage();
 
             } else {
+                $('#btn_update_technician').prop("disabled","false");
                 _.showEditTechnicianErrorMessage();
             }
 

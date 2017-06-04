@@ -91,23 +91,18 @@ public class UserService implements mz.co.technosupport.service.UserService {
             while (hashtext.length() < 32) {
                 hashtext = "0" + hashtext;
             }
-            System.out.println("passe encriptada: "+hashtext);
+            System.out.println("passe encriptada: " + hashtext);
             return hashtext;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    
-   
-    
 
     @Override
     public boolean areValidCredentials(String username, String password) {
         return userDAO.getUserByCredentials(username, getMD5(password)) == null ? false : true;
     }
 
-    
     public User authenticateUser(String username, String password) {
         return userDAO.getUserByCredentials(username, getMD5(password));
     }
@@ -421,13 +416,6 @@ public class UserService implements mz.co.technosupport.service.UserService {
 
         return userInfo;
     }
-    
-    
-    
-    
-    
-    
-    
 
     private TechnicianAccountInfo technicianAccountInfoMethod(Technitian technitian) {
 
@@ -537,4 +525,22 @@ public class UserService implements mz.co.technosupport.service.UserService {
 
         return affiliateInfoList;
     }
+
+    public boolean checkIfUserExists(String affiliateEmail) {
+        User user = null;
+        boolean exists = false;
+        try {
+            user = userDAO.getUserByEmail(affiliateEmail);
+            if (user == null) {
+                exists = true;
+            } else {
+                exists = false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return exists;
+    }
+
 }

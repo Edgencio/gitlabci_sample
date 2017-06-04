@@ -6,7 +6,6 @@
 
 <div class="ks-column ks-page">
 
-
     <div class="ks-content">
         <div class="ks-body ks-profile">
             <div class="ks-header">
@@ -71,9 +70,16 @@
                                             <div class="card-block" >
                                                 <a  class="ks-item">
                                                     <div class="ks-preview">
-                                                        <span class="ks-video-preview">
+<!--                                                        <span class="ks-video-preview">
                                                             <span class="fa fa-windows ks-icon"></span>
-                                                        </span>
+                                                        </span>-->
+
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Monitor'" src="webroot/assets/img/monitor.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Printer'" src="webroot/assets/img/printer.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Keyboard'" src="webroot/assets/img/keyboard.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pendin_ticket.category.name=='Mouse'" src="webroot/assets/img/mouse.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Antivirus'" src="webroot/assets/img/virus.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Windows'" src="webroot/assets/img/windows.png">
                                                     </div>
                                                     <div  class="ks-info row col-sm-12" >
                                                         <div class="col-sm-9" ng-click="showDetails(pending_ticket.id)">
@@ -173,7 +179,7 @@
                                                     <td>{{ticket.name}}</td>
                                                     <td>
                                                         <div class="ks-user">
-                                                            <span class="ks-name">{{ticket.technician.supplier.name}}</span>
+                                                            <span class="ks-name">{{ticket.consumer.customer.name}}</span>
                                                         </div>
                                                     </td>
                                                     <td>

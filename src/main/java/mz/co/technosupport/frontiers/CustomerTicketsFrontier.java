@@ -94,7 +94,7 @@ public class CustomerTicketsFrontier {
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
             long customerId = user.getCustomer().getCustomerID();
-            pendingTickets = ticketService.getCustomerPendingTickets(customerId, 0, 15);
+            pendingTickets = ticketService.getCustomerPendingTickets(customerId, 0, 3);
 
         } catch (Exception ex) {
             ex.printStackTrace();

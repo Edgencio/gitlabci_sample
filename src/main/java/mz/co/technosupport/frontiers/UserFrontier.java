@@ -5,6 +5,9 @@
  */
 package mz.co.technosupport.frontiers;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -90,13 +93,17 @@ public class UserFrontier {
         }
     }
 
-    public boolean updatePassword(String new_pass) {
+    public boolean updatePassword(String old_pass, String new_pass) {
         User user;
+        String old_pass_hash;
+        String new_pass_hash;
         try {
             UserDTO usr = (UserDTO) activeUser.getProperty("user");
             long userId = usr.getUserId();
-            user = userDAO.find(userId);
-            user.setPassword(new_pass);
+            old_pass_hash=getMD5(old_pass);
+            new_pass_hash=getMD5((new_pass));
+            user = userDAO.getUserByPassword(userId, old_pass_hash);
+            user.setPassword(new_pass_hash);
             userDAO.update(user);
             return true;
         } catch (Exception ex) {
@@ -105,6 +112,28 @@ public class UserFrontier {
         }
 
     }
+    
+    
+    public String getMD5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+            // Now we need to zero pad it if you actually want the full 32 chars.
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            System.out.println("passe encriptada: "+hashtext);
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    
+    
+    
 
     public void refreshPage() {
         UserDTO user = (UserDTO) activeUser.getProperty("user");

@@ -27,6 +27,8 @@ import mz.co.technosupport.dto.UserDTO;
 import mz.co.technosupport.info.account.ClientAccountInfo;
 import mz.co.technosupport.info.ticket.TicketInfo;
 import mz.co.technosupport.service.AccountClientService;
+import mz.co.technosupport.data.services.UserService;
+import mz.co.technosupport.info.UserInfo;
 import mz.co.technosupport.util.EmailSender;
 
 /**
@@ -48,7 +50,10 @@ public class CustomerAffiliatesFrontier {
 
     @Inject
     private UserDAO userDAO;
-    
+
+    @Inject
+    private UserService userService;
+
     @Inject
     private ConsumerService consumerService;
 
@@ -60,7 +65,7 @@ public class CustomerAffiliatesFrontier {
 
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
-            
+
             long customerId = user.getCustomer().getCustomerID();
             affiliates = customerService.getCustomerAffiliates(customerId);
 
@@ -111,7 +116,6 @@ public class CustomerAffiliatesFrontier {
             user.setEmail(email);
             user.setMobile(phone);
             user.setName(name);
-         
 
             userDAO.update(user);
             return true;
@@ -146,8 +150,7 @@ public class CustomerAffiliatesFrontier {
         }
 
     }
-    
-    
+
     public Collection<String> fetchEmails() {
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
@@ -159,25 +162,40 @@ public class CustomerAffiliatesFrontier {
 
         }
     }
-    
-    
-    public char linkAffiliate (String affiliateEmail){
-        char response='C';
-    try{
-        UserDTO user = (UserDTO) activeUser.getProperty("user");
-        long customerId = user.getCustomer().getCustomerID();
-        response=consumerService.saveConsumer(customerId, affiliateEmail);
-         EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
-                        user.getUserName());
-        return response;
-     
-    
-    }catch(Exception ex){
-    ex.printStackTrace();
-    return 'C';
+
+    public char linkAffiliate(String affiliateEmail) {
+        char response = ' ';
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            response = consumerService.saveConsumer(customerId, affiliateEmail);
+            // EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
+            //             user.getUserName());
+            return response;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 'C';
+        }
     }
-    
+
+    public boolean checkIfUserExists(String affiliateEmail) {
+        boolean exists = false;
+        UserInfo usr = new UserInfo();
+        try {
+
+            usr = userService.getUserByUsername(affiliateEmail);
+            if (usr.getUsername() == null) {
+                exists = false;
+            } else {
+                exists = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return exists;
+
     }
-    
 
 }

@@ -11,7 +11,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
 
-<!--            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosuport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
+<!--            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosupport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
             <property name="hibernate.connection.username" value="admin"/>
             <property name="hibernate.connection.password" value="Technoadmin!12"/>-->
 

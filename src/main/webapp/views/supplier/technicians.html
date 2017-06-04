@@ -15,7 +15,7 @@
                             <div class="row ">
                                 <div class="col-xl-9 ks-tables-container">
 
-                                    <list name="techniciansList" each="supplierTechnician" src="SupplierTechniciansFrontier.fetchTechniciansPerPage" repeat-element="#technicianCard" per-page="4" postFetch="postFetchTechnicians(result)">
+                                    <list name="techniciansList" each="supplierTechnician" src="SupplierTechniciansFrontier.fetchTechniciansPerPage" repeat-element="#techCard" per-page="4" postFetch="postFetchTechnicians(result)">
                                     <div class="card panel panel-default ks-information ks-light" id="affiliates_contaier">
                                         <h5 class="card-header">
                                             <span class="ks-text">Técnicos</span>
@@ -27,7 +27,7 @@
 
                                             <div class="row " id="affiliates_container"   >
 
-                                                <div  id="technicianCard" class="card panel ks-dashboard-widget ks-widget-profile-default col-sm-5">
+                                                <div  id="techCard" class="card panel ks-dashboard-widget ks-widget-profile-default col-sm-5">
                                                     <div class="card-block" id="affiliate_card">
                                                         <div class="ks-user">
                                                             <a href="#" class="ks-avatar">
@@ -185,7 +185,8 @@
                         <input type="email" class="form-control" aria-describedby="emailHelp" ng-model="technicianEmail" placeholder="Introduza o email" data-validation="email" required>
                     </div>
 
-                    <div  id="existing_technician_email" class="form-group">
+                    <div  id="existing_technician_email" class="form-group" style="margin-top:10px">
+                        <p style="color:#757575; font-size: 11px">Introduza o email de um técnico. Caso este ainda não possua uma conta no Technosupport, clique em "Novo Técnico". </p>
                         <label>E-mail</label>
                         <input type="email" class="form-control" id="technician_typeahead" aria-describedby="emailHelp" ng-model="existingTechnicianEmail" placeholder="Introduza o email" data-provide="typeahead" autocomplete="off" data-validation="email" required>
                     </div>

@@ -24,7 +24,9 @@ import mz.co.technosupport.data.services.AccountTechnicianImpl;
 import mz.co.technosupport.data.services.CustomerService;
 import mz.co.technosupport.data.services.SupplierService;
 import mz.co.technosupport.data.services.TechnitianService;
+import mz.co.technosupport.data.services.UserService;
 import mz.co.technosupport.dto.UserDTO;
+import mz.co.technosupport.info.UserInfo;
 import mz.co.technosupport.info.account.TechnicianAccountInfo;
 import mz.co.technosupport.util.EmailSender;
 
@@ -50,6 +52,9 @@ public class SupplierTechniciansFrontier {
 
     @Inject
     private UserDAO userDAO;
+    
+    @Inject
+    private UserService userService;
 
     @Inject
     private TechnitianService technitianService;
@@ -74,6 +79,9 @@ public class SupplierTechniciansFrontier {
     }
 
     public boolean createTechnician(String fullName, String phone, String email) {
+        if (email == null || email == " " || email == "") {
+            return false;
+        }
         UserDTO user = (UserDTO) activeUser.getProperty("user");
         try {
             TechnicianAccountInfo accountInfo = accountTechnicianServiceImpl.addAffiliate(user.getSupplier().getSupplierID(), email, fullName, phone);
@@ -92,6 +100,10 @@ public class SupplierTechniciansFrontier {
     }
 
     public boolean removeTechnician(String email) {
+
+        if (email == null || email == " " || email == "") {
+            return false;
+        }
 
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
@@ -113,7 +125,6 @@ public class SupplierTechniciansFrontier {
             user.setEmail(email);
             user.setMobile(phone);
             user.setName(name);
-         
 
             userDAO.update(user);
             return true;
@@ -162,19 +173,39 @@ public class SupplierTechniciansFrontier {
     }
 
     public char linkAffiliate(String affiliateEmail) {
-          char response='C';
+        char response = ' ';
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
             long supplierId = user.getSupplier().getSupplierID();
-            response=technitianService.saveTechnician(supplierId, affiliateEmail);
-            EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
-                        user.getUserName());
+            response = technitianService.saveTechnician(supplierId, affiliateEmail);
+//            EmailSender.sendActivationMail(affiliateEmail, user.getUserName(),
+//                        user.getUserName());
             return response;
 
         } catch (Exception ex) {
             ex.printStackTrace();
             return 'C';
         }
+
+    }
+    
+    
+       public boolean checkIfUserExists(String affiliateEmail) {
+        boolean exists = false;
+        UserInfo usr = new UserInfo();
+        try {
+
+            usr = userService.getUserByUsername(affiliateEmail);
+            if (usr.getUsername() == null) {
+                exists = false;
+            } else {
+                exists = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return exists;
 
     }
 

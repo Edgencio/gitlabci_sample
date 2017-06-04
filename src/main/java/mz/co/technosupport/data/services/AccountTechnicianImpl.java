@@ -285,6 +285,7 @@ public class AccountTechnicianImpl implements AccountTechnicianService {
             newTechnician.setUser(user);
             newTechnician.setSupplier(technitian.getSupplier());
             newTechnician.setIsAdmin(false);
+            newTechnician.setStatus(1);
             newTechnician.setCreated_at(new Date());
             newTechnician.setCurrentAddress(technitian.getCurrentAddress());
             newTechnician.setLatitude(technitian.getCurrentAddress().getLatitude());

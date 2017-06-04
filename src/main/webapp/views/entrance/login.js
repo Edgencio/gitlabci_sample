@@ -22,6 +22,8 @@ Hi.view(function (_) {
     
 
     _.doLogin = function (user, pass) {
+        
+           $('#login_loader').remove();
         //Verify if username and password fields are not empty.
         if (user == null || pass == null) {
             toastr.error('Por favor, preencha todos os campos!');

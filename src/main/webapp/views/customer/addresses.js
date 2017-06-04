@@ -24,7 +24,7 @@ Hi.view(function (_) {
     _.initMap = function () {
         var url1 = {lat: _.customerAddresses[0].latitude, lng: _.customerAddresses[0].longitude};
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
+            zoom: 12,
             center: url1
         });
 

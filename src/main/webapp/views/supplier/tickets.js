@@ -172,7 +172,11 @@ Hi.view(function (_) {
     _.countSupplierTickets = function () {
         SupplierTicketsFrontier.countSupplierTickets().try(function (result) {
             _.totalSupplierTickets = result;
-            _.$apply();
+            if(_.totalSupplierTickets==0){
+            $('#supplierTicketsNotFound').css("display", "block");
+            _.showTable = false;
+        }
+             _.$apply();
 
 
         });

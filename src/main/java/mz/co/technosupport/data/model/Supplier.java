@@ -26,6 +26,7 @@ public class Supplier extends GenericEntity {
     
     private String mobile;
     
+    @Lob
     private String notes;
     
     @NotNull

@@ -20,23 +20,23 @@ Hi.view(function (_) {
             if (new_pass != rep_pass) {
                 _.showNewPasswordErrorMessage();
             } else {
-                _.updateUserPassword(new_pass);
+                _.updateUserPassword(c_pass, new_pass);
             }
         }
     }
 
 
-    _.updateUserPassword = function (new_password) {
+    _.updateUserPassword = function (old_password, new_password) {
         $("#change_pass_loader").remove();
         $('#btn_change_password').append('<i class="fa fa-spinner fa-spin" id="change_pass_loader"  style="margin-left: 10px;"></i>');
-        UserFrontier.updatePassword(new_password).try(function (result) {
+        UserFrontier.updatePassword(old_password, new_password).try(function (result) {
 
             if (result) {
                 $("#change_pass_loader").remove();
                 _.showUpdatePassSuccessMessage();
             } else {
                 $("#change_pass_loader").remove();
-                _.showUpdatePasswordErrorMessage();
+                _.showOldPasswordErrorMessage();
             }
         });
     }
@@ -94,6 +94,24 @@ Hi.view(function (_) {
         $.alert({
             title: 'Erro!',
             content: 'As senhas introduzidas não são idênticas',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger'
+                }
+
+            }
+        });
+
+    }
+
+
+
+  _.showOldPasswordErrorMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'A tua senha actual não está correcta',
             type: 'danger',
             buttons: {
                 confirm: {

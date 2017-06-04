@@ -69,9 +69,15 @@
                                             <div class="card-block" ng-click="showDetails(pending_ticket.id)">
                                                 <a  class="ks-item">
                                                     <div class="ks-preview">
-                                                        <span class="ks-video-preview">
-                                                            <span class="fa fa-windows ks-icon"></span>
-                                                        </span>
+<!--                                                        <span class="ks-video-preview">
+                                                            <span class="fa fa-windows ks-icon"></span>   </span>-->
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Monitor'" src="webroot/assets/img/monitor.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Printer'" src="webroot/assets/img/printer.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Keyboard'" src="webroot/assets/img/keyboard.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pendin_ticket.category.name=='Mouse'" src="webroot/assets/img/mouse.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Antivirus'" src="webroot/assets/img/virus.png">
+                                                        <img  style="width:60px; heigh:60px" ng-show="pending_ticket.category.name=='Windows'" src="webroot/assets/img/windows.png">
+                                                      
                                                     </div>
                                                     <div class="ks-info">
                                                         <h5 class="ks-header">{{pending_ticket.category.name}}</h5>

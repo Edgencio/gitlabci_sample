@@ -135,7 +135,7 @@ public class TicketServiceImpl implements TicketService {
         
 
         try {
-            tickets = ticketDAO.fetchTicketsByCustomer(supplierId, pageNumber, itemsPerPage, filter, ordering);
+            tickets = ticketDAO.fetchTicketsBySupplier(supplierId, pageNumber, itemsPerPage, filter, ordering);
             List <Ticket> ticketsList = (List<Ticket>) tickets.get("list");
             
             for(Ticket tick:ticketsList){

@@ -45,8 +45,8 @@ Hi.view(function (_) {
 
 
     _.postFetchTickets = function (result) {
-      console.log(result);
-        if (result.totalRowsMatch == 0) {
+     
+        if (result.totalRowsMatch == 0 ) {
             $('#customerTicketsNotFound').css("display", "block");
              _.showTable = false;
             _.$apply();
@@ -115,7 +115,14 @@ Hi.view(function (_) {
     _.countCustomerTickets = function () {
         CustomerTicketsFrontier.countCustomerTickets().try(function (result) {
             _.totalCustomerTickets = result;
-            _.$apply();
+            if(_.totalCustomerTickets==0){
+              $('#customerTicketsNotFound').css("display", "block");
+             _.showTable = false;
+           
+        }
+        _.$apply();
+            
+            
 
 
         });

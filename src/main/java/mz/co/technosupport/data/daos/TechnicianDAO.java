@@ -383,11 +383,17 @@ public class TechnicianDAO extends DAO<Technitian> {
     public Technitian getByEmail(String email) {
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         Technitian technitian = null;
+        List<Technitian> tech = null;
         try {
-           technitian = em.createQuery("select t from Technitian t where t.user.email = :ue ", Technitian.class)
-                    .setParameter("ue", email).setMaxResults(1).getSingleResult();
+            tech = em.createQuery("select t from Technitian t where t.user.email = :ue and t.disabled = false", Technitian.class)
+                    .setParameter("ue", email).getResultList();
+            if (tech.size() > 0) {
+                technitian = tech.get(0);
+                return technitian;
+            }
         } catch (NoResultException e) {
             e.printStackTrace();
+            return null;
         } finally {
             if (em != null) {
                 em.close();

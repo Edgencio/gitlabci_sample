@@ -43,6 +43,27 @@ public class UserDAO extends DAO<User> {
         }
         return user;
     }
+    
+    
+       public User getUserByPassword(long user_id , String password) {
+        User user = new User();
+        EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
+
+        try {
+            user = em.createQuery("select u from User u where u.id =:user_id and  u.password =:password ", User.class)
+                    .setParameter("user_id", user_id)
+                    .setParameter("password", password).setMaxResults(1).getSingleResult();
+
+        } catch (NoResultException e) {
+            user = null;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return user;
+    }
+    
 
     public User verifyValidResetCode(String username, String code) {
         User user = new User();
@@ -72,7 +93,7 @@ public class UserDAO extends DAO<User> {
     
 
     public User getUserByEmail(String email){
-        User user = new User();
+        User user = null;
         EntityManager em = DAO.getEntityManagerFactory().createEntityManager();
         List<User> members = null;
         try {
@@ -82,11 +103,11 @@ public class UserDAO extends DAO<User> {
             members = query.getResultList();
             if (members.size() > 0) {
 
-                return members.get(0);
+                return user=members.get(0);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new RuntimeException("Falha ao recuperar dados na Base de Dados");
+            return null;
         } finally {
             if (em != null) {
                 em.close();

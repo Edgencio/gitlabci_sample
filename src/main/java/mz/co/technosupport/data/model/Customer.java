@@ -4,36 +4,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by Romildo Cumbe 
+ * Created by Romildo Cumbe
  */
 @Entity
 public class Customer extends GenericEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private String name;
-    
+
     @NotNull
     private String email;
-    
+
     @NotNull
     private String imageUrl;
 
     private String phone;
-    
+
     private String mobile;
-    
+
+    @Lob
     private String notes;
-    
+
     @NotNull
     private String type;
-    
+
     private String address;
 
     public Customer() {
@@ -43,7 +45,6 @@ public class Customer extends GenericEntity {
         this.type = "";
         this.address = "";
     }
-    
 
     public Long getId() {
         return id;
@@ -116,8 +117,5 @@ public class Customer extends GenericEntity {
     public void setAddress(String address) {
         this.address = address;
     }
-    
-    
-    
 
 }

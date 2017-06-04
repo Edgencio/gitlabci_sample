@@ -14,7 +14,7 @@ Hi.view(function (_) {
         _.affiliateToEdit = "";
         _.isNewAffiliate=false;
         _.existingAffiliateEmail="";
-        _.initTypeAhead();
+      //  _.initTypeAhead();
 
     }
 
@@ -149,40 +149,65 @@ _.newAffiliate = function (param){
 
 
     _.createAffiliate = function () {
+     $('#btn_saveAffiliate').prop("disabled","true");
         
      if( _.isNewAffiliate){
+         
+        
+         
         CustomerAffiliatesFrontier.createAffiliate(_.affiliateFullName, _.affiliatePhone, _.affiliateEmail).try(function (result) {
             if (result) {
+                $('#btn_saveAffiliate').prop("disabled","false");
                 $('#myModal').modal('toggle');
                 _.showCreateAffiliateSuccessMessage();
 
             } else {
+                $('#btn_saveAffiliate').prop("disabled","false");
                 _.showCreateAffiliateErrorMessage();
             }
             _.$apply();
 
         });
-       } else {
+      
+       
+        }   else 
+           if(! _.isNewAffiliate){
            
-
-           
-        CustomerAffiliatesFrontier.linkAffiliate(_.existingAffiliateEmail).try(function (result){
-            
+         CustomerAffiliatesFrontier.checkIfUserExists(_.existingAffiliateEmail).try(function (result){
+             if(result==true){
+                CustomerAffiliatesFrontier.linkAffiliate(_.existingAffiliateEmail).try(function (result){
+          
             if(result=='A'){
+                  $('#btn_saveAffiliate').prop("disabled","false");
                   $("#save_affiliate_loader").remove();
                   $('#myModal').modal('toggle');
                 _.showAffiliateAlreadyLinkedMessage();
             }else 
                 if(result='B'){
+                $('#btn_saveAffiliate').prop("disabled","false");
                  $("#save_affiliate_loader").remove();
                  $('#myModal').modal('toggle');
-                _.showCreateAffiliateSuccessMessage();
-            }else 
-                if (result=='C') {
+                  _.showCreateAffiliateSuccessMessage();
+            }else
+                if(result='C'){
+                 $('#btn_saveAffiliate').prop("disabled","false");
                  $("#save_affiliate_loader").remove();
                _.showCreateAffiliateErrorMessage(); 
+                
             }
-        });
+        });  
+                 
+             }else{
+                 
+                  $("#save_affiliate_loader").remove();
+                  $('#btn_saveAffiliate').prop("disabled","false");
+                 _.showUserNotFoundMessage();
+             }
+             
+             
+         });
+           
+       
         
     }
 
@@ -200,6 +225,29 @@ _.newAffiliate = function (param){
             }
 
         });
+    }
+
+
+    _.showUserNotFoundMessage = function () {
+        $.alert({
+            title: 'Erro!',
+            content: 'Usuário não encontrado! Tente criar um novo',
+            type: 'danger',
+            buttons: {
+                confirm: {
+                    text: 'OK',
+                    btnClass: 'btn-danger',
+                    action: function(){
+                         $('#btn_saveAffiliate').prop("disabled","false");
+                           CustomerAffiliatesFrontier.refreshPage().try(function () {
+
+                        });
+                    }
+                }
+
+            }
+        });
+
     }
 
 
@@ -221,7 +269,7 @@ _.newAffiliate = function (param){
 
 
     _.postFetchAffiliates = function (result) {
-        console.log(result);
+       // console.log(result);
         if (result.totalRowsMatch === 0) {
              
             $('#customerAffiliatesNotFound').css("display", "block");
@@ -264,7 +312,7 @@ _.newAffiliate = function (param){
                     text: 'OK',
                     btnClass: 'btn-danger',
                     action: function () {
-                     
+                    
                     }
                 }
 
@@ -294,7 +342,7 @@ _.newAffiliate = function (param){
     _.emptyEmailMessage = function () {
         $.alert({
             title: 'Erro!',
-            content: 'O campo de email não pode ser vazio',
+            content: 'Por favor introduza um email válido!',
             type: 'danger',
             buttons: {
                 confirm: {
@@ -335,13 +383,16 @@ _.newAffiliate = function (param){
 
 
     _.editAffiliate = function () {
+        $('#btn_update_affiliate').prop("disabled","true");
 
         CustomerAffiliatesFrontier.editAffiliate(_.affiliateFullName, _.affiliatePhone, _.affiliateEmail, _.affiliateToEdit.user.id).try(function (result) {
 
             if (result) {
+                $('#btn_update_affiliate').prop("disabled","false");
                 _.showEditAffiliateSuccessMessage();
 
             } else {
+                $('#btn_update_affiliate').prop("disabled","false");
                 _.showEditAffiliateErrorMessage();
             }
 

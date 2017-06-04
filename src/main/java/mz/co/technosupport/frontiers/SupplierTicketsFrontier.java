@@ -82,7 +82,7 @@ public class SupplierTicketsFrontier {
         try {
             UserDTO user = (UserDTO) activeUser.getProperty("user");
             long supplierId = user.getSupplier().getSupplierID();
-            pendingTickets = ticketService.getSupplierPendingTickets(supplierId, 0, 15);
+            pendingTickets = ticketService.getSupplierPendingTickets(supplierId, 0, 4);
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -7,6 +7,7 @@ package mz.co.technosupport.data.model;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import javax.persistence.Lob;
 
 /**
  *
@@ -17,7 +18,11 @@ public class SupplierInfo implements Serializable{
     
     private String title;
     private double rating;
+    
+    @Lob
     private String about;
+    
+    @Lob
     private String skills;
     private String accountType;
     

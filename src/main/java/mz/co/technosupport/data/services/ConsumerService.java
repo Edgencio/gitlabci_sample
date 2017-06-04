@@ -34,31 +34,44 @@ public class ConsumerService {
 
     public char saveConsumer(long customerId, String affiliateEmail) {
         User user = null;
+        char errorController = 'C';
         Customer customer = null;
         Consumer verifyConsumer = null;
 
         try {
-            verifyConsumer = consumerDAO.getByEmail(affiliateEmail);
-            if (verifyConsumer != null) {
-                return 'A'; // Means user is already an affiliate; 
-            }
-
             user = userDAO.getUserByEmail(affiliateEmail);
-            customer = customerDAO.find(customerId);
 
-            Consumer consumer = new Consumer();
-            consumer.setUser(user);
-            consumer.setIsAdmin(false);
-            consumer.setDisabled(false);
-            consumer.setCustomer(customer);
-            consumer.setCreated_at(new Date());
-            consumerDAO.create(consumer);
-            return 'B'; // Means affilate successfully linked;
+            verifyConsumer = consumerDAO.getByEmail(affiliateEmail);
+            if (verifyConsumer == null) {
+                customer = customerDAO.find(customerId);
+
+                Consumer consumer = new Consumer();
+                consumer.setUser(user);
+                consumer.setIsAdmin(false);
+                consumer.setDisabled(false);
+                consumer.setCustomer(customer);
+                consumer.setCreated_at(new Date());
+                consumerDAO.create(consumer);
+                errorController = 'B'; // Means affilate successfully linked; 
+            } else {
+                if (verifyConsumer.isDisabled()) {
+
+                    customer = customerDAO.find(customerId);
+
+                    verifyConsumer.setDisabled(false);
+                    consumerDAO.update(verifyConsumer);
+                    errorController = 'B';
+                } else if (!verifyConsumer.isDisabled()) {
+
+                    errorController = 'A'; // Means user is already an affiliate; 
+                }
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
             return 'C'; // Means There was an error during the operation;
         }
+        return errorController;
 
     }
 
