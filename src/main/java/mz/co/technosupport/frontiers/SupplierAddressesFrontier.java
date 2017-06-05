@@ -60,20 +60,44 @@ public class SupplierAddressesFrontier {
         }
         return true;
     }
-    
 
-    
-    public boolean removeAddress(long addressId){
-        try{UserDTO user = (UserDTO) activeUser.getProperty("user");
-         long supplierId = user.getSupplier().getSupplierID();
-         accountTechnicianServiceImpl.removeAddress(supplierId, addressId);
-          frontEnd.ajaxRedirect("supplier/addresses");
-         }catch(Exception ex){
-         ex.printStackTrace();
-         return false;
-         }
+    public boolean removeAddress(long addressId) {
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long supplierId = user.getSupplier().getSupplierID();
+            accountTechnicianServiceImpl.removeAddress(supplierId, addressId);
+            frontEnd.ajaxRedirect("supplier/addresses");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
         return true;
-    
     }
+
+    public boolean addSupplierAddress(String addressName, String addressDescription, double lat, double lng) {
+        try {
+            if (addressName == " " || addressName == null) {
+                return false;
+            } else if (addressDescription == " " || addressDescription == null) {
+                return false;
+            } else if (lat == 0 || lat == 0) {
+                return false;
+            } else {
+                UserDTO user = (UserDTO) activeUser.getProperty("user");
+                long supplierId = user.getSupplier().getSupplierID();
+                accountTechnicianServiceImpl.addAddress(supplierId, addressName, addressDescription, lat, lng);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
+    
+        public void refreshPage() {
+        frontEnd.ajaxRedirect("supplier/addresses");
+    }
+
 
 }

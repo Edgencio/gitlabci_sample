@@ -61,20 +61,44 @@ public class CustomerAddressesFrontier {
         }
         return true;
     }
-    
 
-    
-    public boolean removeAddress(long addressId){
-        try{UserDTO user = (UserDTO) activeUser.getProperty("user");
-         long customerId = user.getCustomer().getCustomerID();
-         accountClientServiceImpl.removeAddress(customerId, addressId);
-          frontEnd.ajaxRedirect("customer/addresses");
-         }catch(Exception ex){
-         ex.printStackTrace();
-         return false;
-         }
+    public boolean addCustomerAddress(String addressName, String addressDescription, double lat, double lng) {
+        try {
+            if (addressName == " " || addressName == null) {
+                return false;
+            } else if (addressDescription == " " || addressDescription == null) {
+                return false;
+            } else if (lat == 0 || lat == 0) {
+                return false;
+            } else {
+                UserDTO user = (UserDTO) activeUser.getProperty("user");
+                long customerId = user.getCustomer().getCustomerID();
+                accountClientServiceImpl.addAddress(customerId, addressName, addressDescription, lat, lng);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
         return true;
+    }
+
+    public boolean removeAddress(long addressId) {
+        try {
+            UserDTO user = (UserDTO) activeUser.getProperty("user");
+            long customerId = user.getCustomer().getCustomerID();
+            accountClientServiceImpl.removeAddress(customerId, addressId);
+            frontEnd.ajaxRedirect("customer/addresses");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+
+    }
     
+    
+     public void refreshPage() {
+        frontEnd.ajaxRedirect("customer/addresses");
     }
 
 }
