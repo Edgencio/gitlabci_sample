@@ -1,0 +1,46 @@
+image: 192.168.5.158:4567/private-projects/registry/maven-java-oracle/jdk-8:latest
+cache:
+ paths:
+  - .m2/repository
+
+variables:
+ MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+stages:
+  - build
+  - package
+  - deploy
+
+
+maven-build:
+  stage: build
+  script:
+  - mvn validate
+  - mvn initialize
+  - mvn generate-sources
+  - mvn process-sources
+  - mvn generate-resources
+  - mvn process-resources
+  - mvn compile
+  - mvn process-classes
+
+
+maven-package:
+ stage: package
+ script: "mvn package"
+ artifacts:
+  expire_in: '1 week'
+  paths:
+   - target/*.war
+ dependencies:
+  - maven-build
+
+
+
+deploy:
+ stage: deploy
+ script:
+ - chmod +x bin/deploy.sh
+ - ./bin/deploy.sh
+ dependencies:
+  - maven-package

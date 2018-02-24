@@ -6,12 +6,13 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <properties>
+            <property name="tomee.jpa.factory.lazy" value="true" />
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
 
-<!--            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosupport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
+<!--         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosupport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
             <property name="hibernate.connection.username" value="admin"/>
             <property name="hibernate.connection.password" value="Technoadmin!12"/>-->
 
@@ -19,6 +20,10 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/technosupport_db?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
             <property name="hibernate.connection.username" value="root"/>
             <property name="hibernate.connection.password" value="edgencio58"/>
+            
+<!--        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://adviser-rds.ckrrumksn3qq.us-east-2.rds.amazonaws.com:3306/technosupport_app?createDatabaseIfNotExist=true&amp;connectionCollation=utf8_general_ci"/>
+            <property name="hibernate.connection.username" value="technoplus"/>
+            <property name="hibernate.connection.password" value="TECHNOADMIN!17"/>-->
 
         </properties>
     </persistence-unit>

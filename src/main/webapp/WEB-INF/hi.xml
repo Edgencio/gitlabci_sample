@@ -1,16 +1,14 @@
-<app xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-     xmlns='http://hi.co.mz/XMLSchema'
-     xsi:schemaLocation='http://hi.co.mz/XMLSchema https://talk-code.github.io/releases/ns/hi-1.0.xsd'>
+<?xml version="1.0" encoding="UTF-8" ?>
+<app xmlns="http://hi-framework.org/XML/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://hi-framework.org/XML/1.0.0
+      http://hi-framework.org/xml/Schema_1_0_0.xsd">
 
     <deployment-mode>DEVELOPMENT</deployment-mode>
     <default-lang>pt</default-lang>
     <web>
-        <welcome-url>entrance/login</welcome-url>
+        <welcome-url>dashboard/tickets</welcome-url>
         <templates>
-             <template>index</template>
-             <template>customer</template>
              <template>dashboard</template>
-             <template>supplier</template>
         </templates>
     </web>
        
